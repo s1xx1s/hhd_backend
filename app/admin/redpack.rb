@@ -3,14 +3,38 @@ ActiveAdmin.register Redpack do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :_type, :money, :total_count, :min_money, :use_type, :subject, :theme_id, :opened, :merch_id
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+
+index do
+  selectable_column
+  column '#', :id
+  column 'ID', :uniq_id
+  column :subject
+  column '所属商家' do |o|
+    o.merchant.try(:name) || o.merchant.try(:uniq_id) || '--'
+  end
+  column '红包汇总' do |o|
+    raw("#{o.total_money / 100.0}<br>#{o.total_count}")
+  end
+  column '红包已发出汇总' do |o|
+    raw("#{o.sent_money / 100.0}<br>#{o.sent_count}")
+  end
+  column '红包类型' do |o|
+    o._type == 0 ? '拼手气红包' : '普通红包'
+  end
+  column '红包使用类型' do |o|
+    if o.use_type == 1
+      '微信现金红包'
+    elsif o.use_type == 2
+      '支付宝现金红包'
+    elsif o.use_type == 3
+      '非现金红包'
+    end
+  end
+  column :opened
+  column 'at', :created_at
+  
+  actions
+end
 
 form html: { multipart: true } do |f|
   f.semantic_errors
