@@ -1,4 +1,10 @@
 class RedpackTheme < ActiveRecord::Base
+  validates :cover, presence: true
+  
+  mount_uploader :cover, CoverImageUploader
+  mount_uploader :take_audio, AudioUploader
+  mount_uploader :result_audio, AudioUploader
+  
   before_create :generate_unique_id
   def generate_unique_id
     begin
