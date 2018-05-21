@@ -26,12 +26,22 @@ class Redpack < ActiveRecord::Base
   
   validate :check_min_value_if_is_cash
   def check_min_value_if_is_cash
-    if self.is_cash
-      puts self.min_value
-      if self.min_value.blank? or self.min_value < 100
-        errors.add(:base, '现金红包最小值不能低于1元')
+    if self.use_type < 3
+      # puts self.min_value
+      if self.min_value.blank? or self.min_value < limit_min_value
+        errors.add(:base, "现金红包最小值不能低于#{limit_min_value / 100}元")
         return false
       end
+    end
+  end
+  
+  def limit_min_value
+    if self.use_type == 1
+      100
+    elsif self.use_type == 2
+      10
+    else
+      0
     end
   end
   
