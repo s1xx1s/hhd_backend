@@ -16,4 +16,8 @@ class RedpackTheme < ActiveRecord::Base
     end while self.class.exists?(:uniq_id => uniq_id)
   end
   
+  def merchant
+    @merchant ||= Merchant.find_by(uniq_id: self.merch_id)
+  end
+  
 end
