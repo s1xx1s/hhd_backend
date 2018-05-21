@@ -44,6 +44,8 @@ gem 'rack-attack'
 # 获取用户的user agent
 gem 'rack-user_agent'
 
+gem "active_admin_import" , '3.0.0'
+
 # 支持解析xml
 # gem 'actionpack-xml_parser'
 
