@@ -13,12 +13,12 @@ index do
     o.merchant.try(:name) || o.merchant.try(:uniq_id) || '--'
   end
   column '红包预览' do |o|
-    image_tag o.redpack_image_url, size: '200x355'
+    image_tag o.redpack_image_url
   end
-  column '红包汇总' do |o|
+  column '总金额/总个数' do |o|
     raw("#{o.total_money / 100.0}<br>#{o.total_count}")
   end
-  column '红包已发出汇总' do |o|
+  column '已发出金额/已发送个数' do |o|
     raw("#{o.sent_money / 100.0}<br>#{o.sent_count}")
   end
   column '红包类型' do |o|
