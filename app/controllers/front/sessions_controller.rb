@@ -22,7 +22,7 @@ class Front::SessionsController < Front::ApplicationController
       log_in user
       remember(user)
       session['wechat.code'] = nil
-      redirect_back_or(nil)
+      redirect_to params[:url]
     else
       # flash[:error] = '登录认证失败'
       # redirect_back_or(nil)

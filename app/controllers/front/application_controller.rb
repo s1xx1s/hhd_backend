@@ -20,7 +20,7 @@ class Front::ApplicationController < ApplicationController
         redirect_to @wx_auth_url
       else
         # puts '不是微信浏览器'
-        redirect_url  = redirect_url  = "#{SiteConfig.auth_redirect_uri}?url=#{url}&provider=qq"
+        redirect_url = "#{SiteConfig.auth_redirect_uri}?url=#{url}&provider=qq"
         # puts redirect_url
         @qq_auth_url = "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=#{SiteConfig.qq_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&scope=get_user_info"
         # puts @qq_auth_url
