@@ -118,6 +118,34 @@ p, h2 {
   background-image:url("http://hb-assets.small-best.com/uploads/redpack_theme/cover/4/big_f4c110d0-26b2-4419-81eb-2f363b1b2135.jpg?e=1842343376&token=TL7vgIdADfCg9dJGncUGqvj51t0JfO8IORBBO9JX:G74YA0jM6A6AuH3nLaIVZvX6iM0=&watermark/3/image/aHR0cDovL2hoZC5hZnRlcndpbmQuY24vcXJjb2RlP3RleHQ9aHR0cDovL2hoZC5hZnRlcndpbmQuY24vcmVkcGFjaz9pZD0yNDA3NTI2Mg==/gravity/South/dissolve/100/dx/10/dy/60/text/5rqQ56CB5pe25Luj6YCB5L2g5LiA5LiqMTAw5YWD55qE57qi5YyF/gravity/Center/font/6buR5L2T/fontsize/880/fill/I0Y4RDNBNg==/dissolve/100/dx/0/dy/120");
 }
 
+.login-box {
+  background:rgba(0,0,0,0.9);
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  padding-top: 60px;
+  h2 {
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-weight:normal;
+    margin-bottom: 120px;
+//    margin-top: 30px;
+  }
+  
+  .login-button {
+    display: block;
+    width: 80px;
+    height: 80px;
+    color: white;
+  }
+  .qq {
+    max-width: 70px;
+  }
+}
+
 table {
   border-width: 0;
   border-style: none;

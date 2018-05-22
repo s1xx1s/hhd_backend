@@ -16,8 +16,18 @@ Rails.application.routes.draw do
   get 'qrcode' => 'home#qrcode', as: :qrcode
   
   # /redpack?id=3848484
-  get 'redpack' => 'home#redpack', as: :redpack
+  
   get 'hb_test' => 'home#qrcode_test'
+    
+  namespace :front, path: '' do 
+    # 网页认证登录
+    get    'login'    => 'sessions#new',       as: :login
+    get    'redirect' => 'sessions#save_user', as: :redirect_uri
+    delete 'logout'   => 'sessions#destroy',   as: :logout
+    
+    get 'redpack'     => 'redpacks#detail', as: :redpack
+    
+  end
   
   # 队列后台管理
   require 'sidekiq/web'

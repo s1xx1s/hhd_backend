@@ -5,7 +5,7 @@ module SessionsHelper
   
   def remember(user)
     cookies.permanent.signed[:user_id] = user.id
-    cookies.permanent[:remember_token] = user.private_token
+    cookies.permanent[:remember_token] = Digest::MD5.hexdigest(user.private_token)
   end
   
   def redirect_back_or(default)
@@ -19,16 +19,16 @@ module SessionsHelper
   
   def current_user
     
-    if Rails.env.development?
-      @current_user ||= User.find_by(id: 1)
-      return @current_user
-    end
+    # if Rails.env.development?
+    #   @current_user ||= User.find_by(id: 1)
+    #   return @current_user
+    # end
     
     if session[:user_id]
       @current_user ||= User.find_by(id: session[:user_id])
     elsif cookies.signed[:user_id]
       user = User.find_by(id: cookies.signed[:user_id])
-      if user && user.private_token == cookies[:remember_token]
+      if user && Digest::MD5.hexdigest(user.private_token) == cookies[:remember_token]
         log_in user
         @current_user = user
       end
