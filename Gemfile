@@ -54,6 +54,7 @@ gem "active_admin_import" , '3.0.0'
 
 # 生成二维码
 # gem 'rqrcode_png'
+gem 'rqrcode'
 
 # redis
 gem 'redis'

@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   # 网页文档
   resources :pages, path: :p, only: [:show]
   
+  # 获取二维码图片
+  # /qrcode?text=http://www.baidu.com
+  get 'qrcode' => 'home#qrcode', as: :qrcode
+  
   # 队列后台管理
   require 'sidekiq/web'
   authenticate :admin_user do

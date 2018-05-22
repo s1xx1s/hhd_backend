@@ -1,5 +1,4 @@
 class Merchant < ActiveRecord::Base
-  
   mount_uploader :avatar, AvatarUploader
   
   before_create :generate_id_and_private_token

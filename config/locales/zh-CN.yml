@@ -221,7 +221,7 @@
         opened: '红包启用'
       redpack_theme:
         name: '名称'
-        cover: '红包壳子'
+        cover: '红包封面图'
         take_audio: '抢红包背景音乐'
         result_audio: '红包结果声音'
         merch_id: '所属商家'

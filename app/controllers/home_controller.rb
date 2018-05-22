@@ -1,5 +1,5 @@
 require 'open-uri'
-
+require 'rqrcode'
 class HomeController < ApplicationController
   def error_404
     render text: 'Not found', status: 404, layout: false
@@ -23,7 +23,34 @@ class HomeController < ApplicationController
     end
     
   end
+  
+  def qrcode_test
+    @qr = RQRCode::QRCode.new( 'https://github.com/whomwah/rqrcode', :size => 4, :level => :h )
+  end
+  
+  def qrcode
+    if params[:text].blank?
+      render text: 'Need text params', status: 404
+      return
+    end
     
+    qrcode = RQRCode::QRCode.new("#{params[:text]}")
+    image = qrcode.as_png(
+      resize_gte_to: false,
+      resize_exactly_to: false,
+      fill: 'white',
+      color: 'black',
+      size: 120,
+      border_modules: 0,
+      module_px_size: 6,
+      file:nil
+    )
+    
+    image.save('qrcode.png')
+    File.open('qrcode.png', 'wb' ) { |io| image.write(io) }
+    send_data image.to_blob, disposition: 'inline', type: 'image/png'
+  end
+  
   def install
     ua = request.user_agent
     is_wx_browser = ua.include?('MicroMessenger') || ua.include?('webbrowser')

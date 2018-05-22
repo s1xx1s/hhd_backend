@@ -1,9 +1,7 @@
 class RedpackTheme < ActiveRecord::Base
-  validates :cover, presence: true
+  validates :cover, :qrcode_watermark_pos, :qrcode_watermark_config, :text_watermark_pos,:text_watermark_config, presence: true
   
   mount_uploader :cover, CoverImageUploader
-  mount_uploader :take_audio, AudioUploader
-  mount_uploader :result_audio, AudioUploader
   
   before_create :generate_unique_id
   def generate_unique_id
@@ -18,6 +16,52 @@ class RedpackTheme < ActiveRecord::Base
   
   def merchant
     @merchant ||= Merchant.find_by(uniq_id: self.merch_id)
+  end
+  
+  def self.watermark_pos_data
+    [
+      ['-- 无 --', nil], 
+      ['左上', 'NorthWest'], 
+      ['中上', 'North'], 
+      ['右上', 'NorthEast'],
+      ['左中', 'West'], 
+      ['正中', 'Center'], 
+      ['右中', 'East'],
+      ['左下', 'SouthWest'], 
+      ['中下', 'South'], 
+      ['右下', 'SouthEast'],
+    ]
+  end
+  
+  def watermark_image(qrcode_image, watermark_text = nil)
+    watermark_text = watermark_text || '识别二维码关注抢红包'
+    
+    img_url = self.cover.url(:big)
+    
+    watermark_image_content = watermark_image_content qrcode_image
+    # puts watermark_image_content
+    watermark_text_content  = watermark_text_content watermark_text
+    # puts watermark_text_content
+    if img_url.include? "?"
+      spliter = '&'
+    else
+      spliter = "?"
+    end
+    
+    "#{img_url}#{spliter}watermark/3#{watermark_image_content}#{watermark_text_content}"
+  end
+  
+  private
+  def watermark_image_content(image_url)
+    return '' if image_url.blank?
+    
+    "/image/#{Base64.urlsafe_encode64(image_url)}/gravity/#{self.qrcode_watermark_pos}#{self.qrcode_watermark_config}"
+  end
+  
+  def watermark_text_content(text)
+    return '' if text.blank?
+    
+    "/text/#{Base64.urlsafe_encode64(text)}/gravity/#{self.text_watermark_pos}#{self.text_watermark_config}"
   end
   
 end
