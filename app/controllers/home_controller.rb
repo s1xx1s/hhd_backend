@@ -40,7 +40,7 @@ class HomeController < ApplicationController
       resize_exactly_to: false,
       fill: 'white',
       color: 'black',
-      size: 120,
+      size: 200,
       border_modules: 0,
       module_px_size: 6,
       file:nil
