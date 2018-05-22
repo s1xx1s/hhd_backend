@@ -17,7 +17,7 @@ class Redpack < ActiveRecord::Base
   end
   
   def theme
-    @theme || = RedpackTheme.find_by(uniq_id: self.theme_id)
+    @theme ||= RedpackTheme.find_by(uniq_id: self.theme_id)
   end
   
   validate :total_money_large_sent_money
