@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   
   # /redpack?id=3848484
   get 'redpack' => 'home#redpack', as: :redpack
+  get 'hb_test' => 'home#qrcode_test'
   
   # 队列后台管理
   require 'sidekiq/web'
