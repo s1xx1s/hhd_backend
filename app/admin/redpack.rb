@@ -12,6 +12,9 @@ index do
   column '所属商家' do |o|
     o.merchant.try(:name) || o.merchant.try(:uniq_id) || '--'
   end
+  column '红包预览' do |o|
+    image_tag o.redpack_image_url, size: '200x355'
+  end
   column '红包汇总' do |o|
     raw("#{o.total_money / 100.0}<br>#{o.total_count}")
   end

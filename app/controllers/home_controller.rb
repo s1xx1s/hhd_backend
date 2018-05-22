@@ -51,6 +51,16 @@ class HomeController < ApplicationController
     send_data image.to_blob, disposition: 'inline', type: 'image/png'
   end
   
+  def redpack
+    @redpack = Redpack.find_by(uniq_id: params[:id])
+    if @redpack.blank? or !@redpack.opened
+      render text: '红包不存在', status: 404
+      return 
+    end
+    
+    @img_url = @redpack.redpack_image_url
+  end
+  
   def install
     ua = request.user_agent
     is_wx_browser = ua.include?('MicroMessenger') || ua.include?('webbrowser')

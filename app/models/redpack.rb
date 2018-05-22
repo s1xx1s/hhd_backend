@@ -16,6 +16,10 @@ class Redpack < ActiveRecord::Base
     @merchant ||= Merchant.find_by(uniq_id: self.merch_id)
   end
   
+  def theme
+    @theme || = RedpackTheme.find_by(uniq_id: self.theme_id)
+  end
+  
   validate :total_money_large_sent_money
   def total_money_large_sent_money
     if total_money <= sent_money
@@ -94,6 +98,15 @@ class Redpack < ActiveRecord::Base
     end
     
     return _calc_random_money
+  end
+  
+  def redpack_image_url
+    if theme.blank?
+      ''
+    else
+      qrcode_image_url = "#{SiteConfig.main_server}/qrcode?text=#{SiteConfig.main_server}/redpack?id=#{self.uniq_id}"
+      theme.watermark_image(qrcode_image_url, self.subject || '恭喜发财，大吉大利')
+    end
   end
   
   private

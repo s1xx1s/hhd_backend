@@ -88,6 +88,14 @@ p, h2 {
   }
 }
 
+.redpack-box {
+  .cover {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+}
+
 table {
   border-width: 0;
   border-style: none;
