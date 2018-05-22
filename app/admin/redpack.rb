@@ -2,7 +2,7 @@ ActiveAdmin.register Redpack do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :_type, :money, :total_count, :min_money, :use_type, :subject, :theme_id, :opened, :merch_id
+permit_params :_type, :money, :total_count, :min_money, :use_type, :subject, :theme_id, :opened, :merch_id, :bg_audio
 
 index do
   selectable_column
@@ -61,6 +61,7 @@ form html: { multipart: true } do |f|
     end
     f.input :total_count, as: :number, label: '红包个数'
     f.input :theme_id, as: :select, label: '红包模板', collection: RedpackTheme.where(opened: true).map { |theme| [theme.name, theme.uniq_id] }
+    f.input :bg_audio, label: '红包背景音效'
     f.input :min_money, as: :number, label: '最小值', placeholder: '普通红包可不填，拼手气红包可以设置一个抢红包最低金额，默认为0.05元',
        hint: '拼手气红包可以指定一个最小值，如果不设置默认为0.05元；另：如果是发现金红包，那么该值最低不能小于1元'
     f.input :opened

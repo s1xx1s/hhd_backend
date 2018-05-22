@@ -1,6 +1,8 @@
 class Redpack < ActiveRecord::Base
   validates :merch_id, :total_money, :sent_count, :use_type, :theme_id, presence: true
   
+  mount_uploader :bg_audio, AudioUploader
+  
   before_create :generate_unique_id
   def generate_unique_id
     begin
