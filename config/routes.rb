@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   # /qrcode?text=http://www.baidu.com
   get 'qrcode' => 'home#qrcode', as: :qrcode
   
-  /redpack?id=3848484
+  # /redpack?id=3848484
   get 'redpack' => 'home#redpack', as: :redpack
   
   # 队列后台管理
