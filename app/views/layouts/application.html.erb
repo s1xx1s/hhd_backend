@@ -19,6 +19,12 @@
 
 <%= yield %>
 
+<!-- 微信JS SDK -->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<!-- QQ 定位组件 -->
+<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+
 <%= javascript_include_tag 'application' %>
+<%= yield :scripts %>
 </body>
 </html>

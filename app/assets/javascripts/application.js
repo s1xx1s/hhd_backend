@@ -15,11 +15,7 @@
 //= require turbolinks
 //= require bootstrap
 //= require app
-
-//= require redactor-rails/redactor
-//= require redactor-rails/config
-//= require redactor-rails/langs/zh_cn
-//= require redactor-rails/plugins
+//= require md5
 
 $(document).ready(function() {
   $("#fixed-hb").hide();
@@ -36,3 +32,19 @@ $(document).ready(function() {
     }
   })
 });
+
+window.Utils = {
+  getRandomString: function(len) {
+    len = len || 32;
+  　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+  　　var maxPos = $chars.length;
+  　　var pwd = '';
+  　　for (i = 0; i < len; i++) {
+  　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+  　　}
+  　　return pwd;
+  },
+  getAccessKey: function(str) {
+    return hex_md5('c896833925be9f17633ffc386c97b1bb' + str)
+  }
+}

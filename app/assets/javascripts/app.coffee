@@ -4,7 +4,7 @@ window.App =
   
   notice: (msg, to) ->
     $(to).before("<div class='alert alert-success' id='notice-comp'><a class='close' href='#' data-dismiss='alert'>×</a>#{msg}</div>")
-      
+  
   selectMoney: (money) -> 
     $('#current-money').text(money)
   changeMoney: (el) -> 
@@ -35,6 +35,81 @@ window.App =
     if token
       window.localStorage.setItem('token', token)
   
+  # 查看红包
+  viewRedpack: () ->
+    $el = $('.redpack-box')
+    id = $el.data('id')
+    token = $el.data('user')
+    
+    successCallback = (pos) ->
+      App._viewRedpack(id, token, "#{pos.lng},#{pos.lat}");
+
+    errorCallback   = (error) ->
+      App._viewRedpack(id, token, null)
+
+    App.getLocation(successCallback, errorCallback)
+  
+  _viewRedpack: (id, token, pos) ->
+    i = Utils.getRandomString(18)
+    ak = Utils.getAccessKey(i)
+    
+    $.ajax
+      url: "/api/v1/redpack/view"
+      type: "POST"
+      data: { token: token, from_type: 1, loc: pos, i: i, ak: ak }
+      success: (re) ->
+        console.log(re)
+      error: (er) ->
+        console.log(er)
+    
+  # 拆红包
+  takeRedpack: (el) -> 
+    $el = $(el)
+    id = $el.data('id')
+    token = $el.data('user')
+    sign = $el.data('sign')
+    if sign == '1'
+      $('#myModal').modal('show')
+      return
+    App.openRedpack(id, token, null)
+    
+  # 拆口令红包
+  takeSignRedpack: (el) ->
+    $el = $(el)
+    id = $el.data('id')
+    token = $el.data('user')
+    sign = $('#sign-input-control').val()
+    if !sign
+      App.alert('口令不能为空', '#sign-input-control')
+      return
+    
+    App.openRedpack(id, token, sign)
+  
+  openRedpack: (id, token, sign) ->
+    successCallback = (pos) ->
+      # console.log(pos)
+      loc = "#{pos.lng},#{pos.lat}"
+      App._openRedpack(id, token, sign, loc)
+      
+    errorCallback   = (error) ->
+      # console.log(error)
+      App._openRedpack(id, token, sign, null)
+    
+    App.getLocation(successCallback, errorCallback)
+  
+  _openRedpack: (id, token, sign, loc) ->
+    i = Utils.getRandomString(18)
+    ak = Utils.getAccessKey(i)
+    
+    $.ajax
+      url: "/api/v1/redpack/take"
+      type: "POST"
+      data: { token: token, id: id, loc: loc, sign: sign, i: i, ak: ak }
+      success: (re) ->
+        console.log(re)
+      error: (er) ->
+        console.log(er)
+          
   viewHB: (hbid, i, ak) ->
     successCallback = (pos) ->
       App._viewHB(hbid, "#{pos.lng},#{pos.lat}", i, ak);

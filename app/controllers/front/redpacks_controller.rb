@@ -7,7 +7,7 @@ class Front::RedpacksController < Front::ApplicationController
     @redpack = Redpack.find_by(uniq_id: params[:id])
     if @redpack.blank? or !@redpack.opened
       render text: '红包不存在', status: 404
-      return 
+      return
     end
     
     @img_url = @redpack.redpack_image_url
