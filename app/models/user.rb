@@ -20,16 +20,30 @@ class User < ActiveRecord::Base
     hack_mobile
   end
   
+  def auth_profile
+    @profile ||= AuthProfile.where(user_id: self.uid, provider: 'qq').first || AuthProfile.where(user_id: self.uid, provider: 'wechat').first
+  end
+  
   def format_nickname
-    @ud ||= UserDevice.where(uid: self.uid).first
-    return @ud.try(:uname) || "ID:#{self.uid}"
+    auth_profile.try(:nickname) || self.nickname || "ID:#{self.uid}"
+    # @ud ||= UserDevice.where(uid: self.uid).first
+    # return @ud.try(:uname) || "ID:#{self.uid}"
   end
   
   def format_avatar_url
-    if avatar.present?
-      avatar.url(:large)
+    # if avatar.present?
+    #   avatar.url(:large)
+    # else
+    #   ''
+    # end
+    if auth_profile
+      auth_profile.try(:headimgurl)
     else
-      ''
+      if avatar.present?
+        avatar.url(:large)
+      else
+        ''
+      end
     end
   end
   

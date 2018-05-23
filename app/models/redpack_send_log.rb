@@ -19,4 +19,8 @@ class RedpackSendLog < ActiveRecord::Base
   def redpack
     @redpack ||= Redpack.find_by(uniq_id: self.redpack_id)
   end
+  
+  def format_money
+    '%.2f' % (self.money / 100.0)
+  end
 end
