@@ -71,7 +71,7 @@ window.App =
     if sign == '1'
       $('#myModal').modal('show')
       return
-    App.openRedpack(id, token, null)
+    App.openRedpack($el, id, token, null)
     
   # 拆口令红包
   takeSignRedpack: (el) ->
@@ -83,23 +83,29 @@ window.App =
       App.alert('口令不能为空', '#sign-input-control')
       return
     
-    App.openRedpack(id, token, sign)
+    App.openRedpack($el, id, token, sign)
   
-  openRedpack: (id, token, sign) ->
+  openRedpack: (el, id, token, sign) ->
     successCallback = (pos) ->
       # console.log(pos)
       loc = "#{pos.lng},#{pos.lat}"
-      App._openRedpack(id, token, sign, loc)
+      App._openRedpack(el, id, token, sign, loc)
       
     errorCallback   = (error) ->
       # console.log(error)
-      App._openRedpack(id, token, sign, null)
+      App._openRedpack(el, id, token, sign, null)
     
     App.getLocation(successCallback, errorCallback)
   
-  _openRedpack: (id, token, sign, loc) ->
+  _openRedpack: (el, id, token, sign, loc) ->
     i = Utils.getRandomString(18)
     ak = Utils.getAccessKey(i)
+    
+    loading = el.data('loading')
+    if loading == '1'
+      return
+    
+    el.data('loading', '1')
     
     $.ajax
       url: "/api/v1/redpack/take"
@@ -107,11 +113,14 @@ window.App =
       data: { token: token, id: id, loc: loc, sign: sign, i: i, ak: ak }
       success: (re) ->
         # console.log(re)
+        el.data('loading', '0')
         if re.code == 0
+          $('#myModal').modal('hide')
           window.location.href = "/redpack/result?id=" + re.data.id
         else
           alert(re.message)
       error: (er) ->
+        el.data('loading', '0')
         # console.log(er)
         alert(er)
           

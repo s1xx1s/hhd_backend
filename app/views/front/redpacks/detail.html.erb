@@ -2,6 +2,7 @@
   data-id="<%= @redpack.uniq_id %>" 
   data-user="<%= current_user.private_token %>" 
   data-sign="<%= @redpack.sign.empty? ? '0' : '1' %>"
+  data-loading="0"
   onclick="App.takeRedpack(this);">
   
 </a>
@@ -26,7 +27,8 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         <button type="button" class="btn btn-danger"   
           data-id="<%= @redpack.uniq_id %>" 
-          data-user="<%= current_user.private_token %>"  
+          data-user="<%= current_user.private_token %>" 
+          data-loading="0" 
           onclick="App.takeSignRedpack(this);" >领红包</button>
       </div>
     </div>
