@@ -42,6 +42,8 @@
       area: '区域'
       redpack: '红包'
       redpack_theme: '红包模板'
+      redpack_view_log: '红包浏览记录'
+      redpack_send_log: '抢红包记录'
     attributes:
       user:
         uid: 'ID'
