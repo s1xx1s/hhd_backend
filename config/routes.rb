@@ -27,6 +27,9 @@ Rails.application.routes.draw do
     
     get 'redpack'       => 'redpacks#detail', as: :redpack
     
+    # redpack/result?id=3838939393
+    get 'redpack/result' => 'redpacks#result', as: :redpack_result
+    
     # post redpack/take?id=4848474&sign=3838392
     # post 'redpack/take' => 'redpacks#take', as: :redpack_take
     

@@ -106,9 +106,14 @@ window.App =
       type: "POST"
       data: { token: token, id: id, loc: loc, sign: sign, i: i, ak: ak }
       success: (re) ->
-        console.log(re)
+        # console.log(re)
+        if re.code == 0
+          window.location.href = "/redpack/result?id=" + re.data.id
+        else
+          alert(re.message)
       error: (er) ->
-        console.log(er)
+        # console.log(er)
+        alert(er)
           
   viewHB: (hbid, i, ak) ->
     successCallback = (pos) ->

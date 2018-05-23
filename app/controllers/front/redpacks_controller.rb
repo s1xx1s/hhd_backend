@@ -13,4 +13,8 @@ class Front::RedpacksController < Front::ApplicationController
     @img_url = @redpack.redpack_image_url
   end
   
+  def result
+    
+  end
+  
 end
