@@ -25,7 +25,10 @@ Rails.application.routes.draw do
     get    'redirect' => 'sessions#save_user', as: :redirect_uri
     delete 'logout'   => 'sessions#destroy',   as: :logout
     
-    get 'redpack'     => 'redpacks#detail', as: :redpack
+    get 'redpack'       => 'redpacks#detail', as: :redpack
+    
+    # post redpack/take?id=4848474&sign=3838392
+    # post 'redpack/take' => 'redpacks#take', as: :redpack_take
     
   end
   

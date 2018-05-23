@@ -94,6 +94,20 @@ class Redpack < ActiveRecord::Base
     end
   end
   
+  def sign_val=(val)
+    if val.present?
+      self.sign = val.split(/(?:\||\,)/)
+    end
+  end
+  
+  def sign_val
+    if sign.empty?
+      return nil
+    else
+      return sign.join(',')
+    end
+  end
+  
   def random_money
     if self._type != 0
       return self.total_money / self.total_count
@@ -119,6 +133,10 @@ class Redpack < ActiveRecord::Base
     self.sent_count += 1
     self.sent_money += money
     self.save!
+  end
+  
+  def has_left?
+    self.total_money > self.sent_money
   end
   
   private
