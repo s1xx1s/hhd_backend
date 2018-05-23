@@ -1,6 +1,6 @@
 module API
   module V1
-    class RedPacketsAPI < Grape::API
+    class RedpackAPI < Grape::API
       
       helpers API::SharedParams
       
