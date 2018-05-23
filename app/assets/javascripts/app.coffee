@@ -56,7 +56,7 @@ window.App =
     $.ajax
       url: "/api/v1/redpack/view"
       type: "POST"
-      data: { token: token, from_type: 1, loc: pos, i: i, ak: ak }
+      data: { token: token, id: id, from_type: 1, loc: pos, i: i, ak: ak }
       success: (re) ->
         console.log(re)
       error: (er) ->
