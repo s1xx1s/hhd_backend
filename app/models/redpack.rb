@@ -111,6 +111,16 @@ class Redpack < ActiveRecord::Base
     end
   end
   
+  def add_view_count
+    self.class.increment_counter(:view_count, self.id)
+  end
+  
+  def change_sent_stat!(money)
+    self.sent_count += 1
+    self.sent_money += money
+    self.save!
+  end
+  
   private
   def _calc_random_money
     remain_size = self.total_count - self.sent_count
