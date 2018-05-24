@@ -21,14 +21,17 @@ Rails.application.routes.draw do
     
   namespace :front, path: '' do 
     # 网页认证登录
-    get    'login'    => 'sessions#new',       as: :login
+    # get    'login'    => 'sessions#new',       as: :login
     get    'redirect' => 'sessions#save_user', as: :redirect_uri
     delete 'logout'   => 'sessions#destroy',   as: :logout
+    get 'app_auth' => 'sessions#app_auth'
     
     get 'redpack'       => 'redpacks#detail', as: :redpack
     
     # redpack/result?id=3838939393
     get 'redpack/result' => 'redpacks#result', as: :redpack_result
+    
+    get 'auth/redirect' => 'sessions#app_auth', as: :auth_redirect_uri
     
     # post redpack/take?id=4848474&sign=3838392
     # post 'redpack/take' => 'redpacks#take', as: :redpack_take

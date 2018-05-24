@@ -4,6 +4,55 @@ module API
       
       helpers API::SharedParams
       
+      # 获取用户账号登录地址
+      resource :u, desc: '网页授权登录接口' do
+        desc "获取登录地址"
+        params do
+          optional :url, type: String, desc: '需要授权登录的H5页面地址'
+        end
+        get :auth do
+          
+          redirect_url  = "http://hhd.afterwind.cn/auth/redirect"
+          
+          ua = request.user_agent
+          is_wx_browser = ua.include?('MicroMessenger') || ua.include?('webbrowser')
+          
+          if is_wx_browser
+            # puts '是微信浏览器'
+            # url = request.original_url
+            
+            redirect_url = "#{redirect_url}?provider=wechat"
+            # redirect_url  = "#{SiteConfig.auth_redirect_uri}?url=#{url}&provider=wechat"#"#{wechat_auth_redirect_url}?url=#{request.original_url}"
+
+            auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=#{SiteConfig.wx_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&response_type=code&scope=snsapi_userinfo&state=redpack#wechat_redirect"
+            # redirect_to @wx_auth_url
+          else
+            
+            redirect_url = "#{redirect_url}?provider=qq"
+            
+            auth_url = "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=#{SiteConfig.qq_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&scope=get_user_info"
+          end
+          
+          { code: 0, message: 'ok', data: { url: auth_url } }
+          
+        end # end get auth
+        
+        desc "绑定三方账号"
+        params do
+          requires :code, type: String, desc: '三方登录返回的code'
+          requires :provider, type: String, desc: '三方平台名称'
+        end
+        post :auth_bind do
+          u = UserAuth.create_user(params[:provider], params[:code], "http://hhd.afterwind.cn/auth/redirect?provider=qq")
+          if u.blank?
+            return render_error(4003, '认证登录失败')
+          end
+          
+          { code: 0, message: 'ok', data: { token: u.private_token } }
+        end # end auth_bind
+        
+      end # end resource u
+      
       # 用户账号管理
       resource :account, desc: "注册登录接口" do
         desc "APP用户简单注册"

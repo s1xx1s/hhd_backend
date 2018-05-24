@@ -14,6 +14,7 @@ class Front::RedpacksController < Front::ApplicationController
   end
   
   def result
+    @log = RedpackSendLog.find_by(uniq_id: params[:id])
     
   end
   

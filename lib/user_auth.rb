@@ -1,47 +1,18 @@
 require 'rest-client'
-class Front::SessionsController < Front::ApplicationController
-  # skip_before_filter :check_weixin_legality
-  
-  def app_auth
-    
-  end
-  
-  def save_user
-    if params[:code].blank?
-      # flash[:notice] = '取消登录认证'
-      # redirect_to(request.referrer)
-      render(text: "取消登录认证", status: 401)
-      return 
-    end
-    
-    # 开始登录
-    # session['wechat.code'] = params[:code]
-    if params[:provider] == 'qq'
-      user = qq_auth
-    elsif params[:provider] == 'wechat'
-      user = wechat_auth
-    end
-    
-    if user
-      log_in user
-      remember(user)
-      session['wechat.code'] = nil
-      redirect_to params[:url]
+
+class UserAuth
+  def self.create_user(provider, code, redirect_uri)
+    if provider == 'qq'
+      return UserAuth.qq_auth(code, redirect_uri)
+    elsif provider == 'wechat'
+      return UserAuth.wechat_auth(code, redirect_uri)
     else
-      # flash[:error] = '登录认证失败'
-      # redirect_back_or(nil)
-      render(text: "登录认证失败", status: 401)
+      nil
     end
-    
   end
   
-  def app_auth
-    redirect_to("#{SiteConfig.front_url}?code=#{params[:code]}&provider=#{params[:provider]}")
-  end
-  
-  private 
-  def qq_auth
-    original_url = params[:url]
+  def self.qq_auth(code, redirect_uri)
+    # original_url = params[:url]
 
     # 开始获取Token
     resp = RestClient.get "https://graph.qq.com/oauth2.0/token", 
@@ -49,8 +20,8 @@ class Front::SessionsController < Front::ApplicationController
                                   :client_id      => SiteConfig.qq_app_id,
                                   :client_secret  => SiteConfig.qq_app_secret,
                                   :grant_type => "authorization_code",
-                                  :code       => params[:code],
-                                  :redirect_uri => "#{SiteConfig.auth_redirect_uri}?url=#{original_url}"
+                                  :code       => code,
+                                  :redirect_uri => redirect_uri
                                 } 
                    }
                  
@@ -66,12 +37,10 @@ class Front::SessionsController < Front::ApplicationController
     end
     
     if access_token.blank?
-      flash[:notice] = '登录认证失败'
-      redirect_to(original_url)
-      return
+      return nil
     end
     
-    puts access_token
+    # puts access_token
     # https://graph.qq.com/oauth2.0/me?access_token=YOUR_ACCESS_TOKEN
     
     resp = RestClient.get "https://graph.qq.com/oauth2.0/me", 
@@ -133,16 +102,14 @@ class Front::SessionsController < Front::ApplicationController
     return user
   end
   
-  def wechat_auth
-    original_url = params[:url]
-
+  def self.wechat_auth(code, redirect_uri)
     # 开始获取Token
     resp = RestClient.get "https://api.weixin.qq.com/sns/oauth2/access_token", 
                    { :params => { 
                                   :appid      => SiteConfig.wx_app_id,
                                   :secret     => SiteConfig.wx_app_secret,
                                   :grant_type => "authorization_code",
-                                  :code       => params[:code]
+                                  :code       => code
                                 } 
                    }
                  
@@ -150,9 +117,7 @@ class Front::SessionsController < Front::ApplicationController
     
     openid = result['openid'];
     if openid.blank?
-      flash[:error] = '无效的code，请重试'
-      redirect_to(original_url)
-      return 
+      return nil
     end
     
     profile = AuthProfile.where(openid: openid, provider: 'wechat').first
@@ -192,12 +157,6 @@ class Front::SessionsController < Front::ApplicationController
     end
     
     return user
-  end
-  
-  def destroy
-    log_out
-    render(text: "退出登录成功", status: 200)
-    # redirect_back_or(nil)
   end
   
 end

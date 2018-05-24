@@ -165,6 +165,17 @@ p, h2 {
   }
 }
 
+.empty-box {
+  display: block;
+  width: 80%;
+  padding: 30px;
+  border: 2px dashed #ccc;
+  text-align: center;
+  color: #ccc;
+  margin: 0 auto;
+  margin-top: 60px;
+}
+
 table {
   border-width: 0;
   border-style: none;
