@@ -12,7 +12,7 @@ module API
         end
         get :auth do
           
-          redirect_url  = "http://hhd.afterwind.cn/auth/redirect"
+          # redirect_url  = "http://hhd.afterwind.cn/auth/redirect"
           
           ua = request.user_agent
           is_wx_browser = ua.include?('MicroMessenger') || ua.include?('webbrowser')
@@ -21,14 +21,14 @@ module API
             # puts '是微信浏览器'
             # url = request.original_url
             
-            redirect_url = "#{redirect_url}?provider=wechat"
+            redirect_url = "#{SiteConfig.wx_auth_redirect_uri}?provider=wechat"
             # redirect_url  = "#{SiteConfig.auth_redirect_uri}?url=#{url}&provider=wechat"#"#{wechat_auth_redirect_url}?url=#{request.original_url}"
 
             auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=#{SiteConfig.wx_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&response_type=code&scope=snsapi_userinfo&state=redpack#wechat_redirect"
             # redirect_to @wx_auth_url
           else
             
-            redirect_url = "#{redirect_url}?provider=qq"
+            redirect_url = "http://hhd.afterwind.cn/auth/redirect?provider=qq"
             
             auth_url = "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=#{SiteConfig.qq_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&scope=get_user_info"
           end

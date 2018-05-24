@@ -14,7 +14,7 @@ class Front::ApplicationController < ApplicationController
         # puts '是微信浏览器'
         url = request.original_url
 
-        redirect_url  = "#{SiteConfig.auth_redirect_uri}?url=#{url}&provider=wechat"#"#{wechat_auth_redirect_url}?url=#{request.original_url}"
+        redirect_url  = "#{SiteConfig.wx_auth_redirect_uri}?url=#{url}&provider=wechat"#"#{wechat_auth_redirect_url}?url=#{request.original_url}"
 
         @wx_auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=#{SiteConfig.wx_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&response_type=code&scope=snsapi_userinfo&state=redpack#wechat_redirect"
         redirect_to @wx_auth_url
