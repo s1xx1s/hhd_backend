@@ -28,7 +28,7 @@ module API
             # redirect_to @wx_auth_url
           else
             
-            redirect_url = "http://hhd.afterwind.cn/auth/redirect?provider=qq"
+            redirect_url = "http://hhd.afterwind.cn/redirect?provider=qq"
             
             auth_url = "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=#{SiteConfig.qq_app_id}&redirect_uri=#{Rack::Utils.escape(redirect_url)}&scope=get_user_info"
           end

@@ -7,6 +7,11 @@ class Front::SessionsController < Front::ApplicationController
   end
   
   def save_user
+    if params[:provider] && params[:provider] == 'qq'
+      redirect_to("#{SiteConfig.front_url}?code=#{params[:code]}&provider=#{params[:provider]}")
+      return
+    end
+    
     if params[:code].blank?
       # flash[:notice] = '取消登录认证'
       # redirect_to(request.referrer)
