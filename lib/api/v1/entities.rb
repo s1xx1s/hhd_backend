@@ -173,7 +173,9 @@ module API
             model.bg_audio.url
           end
         end
-        
+        expose :has_sign do |model, opts|
+          model.sign.any?
+        end
         expose :user, as: :owner, using: API::V1::Entities::User
       end
       
