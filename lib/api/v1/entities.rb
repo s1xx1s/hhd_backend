@@ -159,6 +159,16 @@ module API
         expose :answers
       end
       
+      class Redpack < Base
+        expose :uniq_id, as: :id
+        expose :subject
+        expose :cover do |model, opts|
+          model.redpack_image_url
+        end
+        expose :bg_audio, as: :audio, format_with: :null
+        expose :user, as: :owner, using: API::V1::Entities::User
+      end
+      
       class SignRule < Base
         expose :name do |model, opts|
           '口令红包'
