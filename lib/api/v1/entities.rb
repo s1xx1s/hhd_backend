@@ -25,7 +25,7 @@ module API
         expose :avatar do |model, opts|
           model.real_avatar_url
         end
-        # expose :nb_code, as: :invite_code
+        expose :nb_code, as: :invite_code
         expose :earn, format_with: :money_format
         expose :balance, format_with: :money_format
         expose :today_earn, format_with: :money_format
@@ -74,6 +74,7 @@ module API
         expose :avatar do |model, opts|
           model.format_avatar_url
         end
+        unexpose :private_token, as: :token
         # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         # expose :left_days do |model, opts|
         #   model.left_days
@@ -165,7 +166,14 @@ module API
         expose :cover do |model, opts|
           model.redpack_image_url
         end
-        expose :bg_audio, as: :audio, format_with: :null
+        expose :audio do |model, opts|
+          if model.bg_audio.blank?
+            ''
+          else
+            model.bg_audio.url
+          end
+        end
+        
         expose :user, as: :owner, using: API::V1::Entities::User
       end
       
