@@ -18,6 +18,10 @@ class Redpack < ActiveRecord::Base
     @merchant ||= Merchant.find_by(uniq_id: self.merch_id)
   end
   
+  def user
+    @user ||= User.find_by(uid: self.user_id)
+  end
+  
   def theme
     @theme ||= RedpackTheme.find_by(uniq_id: self.theme_id)
   end
