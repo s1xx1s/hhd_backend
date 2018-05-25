@@ -96,15 +96,21 @@ module API
             end
           end
           
+          random_money = hb.random_money
+          if random_money <= 0
+            return render_error(4002, '下手太慢，红包已经被抢完了！')
+          end
+          
           loc = nil
           if params[:loc]
             loc = params[:loc].gsub(',', ' ')
             loc = "POINT(#{loc})"
           end
           
-          log = RedpackSendLog.create!(user_id: user.uid, redpack_id: hb.uniq_id, money: hb.random_money, ip: client_ip, location: loc)
+          log = RedpackSendLog.create!(user_id: user.uid, redpack_id: hb.uniq_id, money: random_money, ip: client_ip, location: loc)
           
-          { code: 0, message: 'ok', data: { id: log.uniq_id } }
+          # { code: 0, message: 'ok', data: { id: log.uniq_id } }
+          render_json(log, API::V1::Entities::RedpackSendLog)
           
         end # end post grab
         

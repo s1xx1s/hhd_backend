@@ -179,6 +179,16 @@ module API
         expose :user, as: :owner, using: API::V1::Entities::User
       end
       
+      class RedpackSendLog < Base
+        expose :uniq_id, as: :id
+        expose :money, format_with: :money_format do |model, opts|
+          model.money / 100.0
+        end
+        expose :created_at, as: :time, format_with: :chinese_datetime
+        expose :redpack_owner, as: :hb_owner, using: API::V1::Entities::User, if: proc { |o| o.redpack_owner.present? }
+        expose :user, using: API::V1::Entities::User
+      end
+      
       class SignRule < Base
         expose :name do |model, opts|
           '口令红包'
