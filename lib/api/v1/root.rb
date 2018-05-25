@@ -33,6 +33,7 @@ module API
       
       mount API::V1::UsersAPI
       mount API::V1::RedpackAPI
+      mount API::V1::PagesAPI
       # mount API::V1::UsersAPI
       # mount API::V1::BannersAPI
       # mount API::V1::MediaAPI

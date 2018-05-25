@@ -101,7 +101,7 @@ module API
       end
       
       class Page < SimplePage
-        expose :body
+        expose :title, :body
       end
       
       class Attachment < Base
