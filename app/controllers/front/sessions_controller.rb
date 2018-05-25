@@ -7,7 +7,7 @@ class Front::SessionsController < Front::ApplicationController
   end
   
   def save_user
-    if params[:provider] && params[:provider] == 'qq'
+    if params[:provider] && (params[:provider] == 'qq' || params[:provider] == 'wechat')
       redirect_to("#{SiteConfig.front_url}?code=#{params[:code]}&provider=#{params[:provider]}")
       return
     end
