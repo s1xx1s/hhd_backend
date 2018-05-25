@@ -74,10 +74,10 @@ module API
         expose :avatar do |model, opts|
           model.format_avatar_url
         end
-        expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
-        expose :left_days do |model, opts|
-          model.left_days
-        end
+        # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
+        # expose :left_days do |model, opts|
+        #   model.left_days
+        # end
         # expose :private_token, as: :token, format_with: :null
       end
       
