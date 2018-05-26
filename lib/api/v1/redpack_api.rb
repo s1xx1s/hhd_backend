@@ -3,8 +3,86 @@ module API
     class RedpackAPI < Grape::API
       
       helpers API::SharedParams
-      
+            
+      #==========================================================================
       resource :redpack, desc: '红包相关接口' do
+        desc "创建红包"
+        params do
+          requires :token, type: String, desc: '用户TOKEN'
+          requires :money, type: Integer, desc: '红包总金额'
+          requires :quantity, type: Integer, desc: '红包个数'
+          requires :_type, type: Integer, desc: '红包类型，0表示拼手气，1表示普通红包'
+          requires :use_type, type: Integer, desc: '红包使用类型；1表示现金红包，2表示非现金红包'
+          optional :subject, type: String, desc: '红包主题'
+          optional :sign, type: String, desc: '红包口令，多个口令使用英文逗号分隔（,）'
+          optional :theme_id, type: Integer, desc: '红包模板'
+          optional :audio_id, type: Integer, desc: '红包音效'
+        end
+        post :create do
+          user = authenticate!
+          
+          if params[:money] <= 100
+            return render_error(-4, '红包金额至少需要1元')
+          end
+          
+          if params[:quantity] < 0
+            return render_error(-4, '红包个数至少1个')
+          end
+          
+          unless %w(0 1).include? params[:_type].to_s
+            return render_error(-4, '不正确的红包类型参数，值为0或1')
+          end
+          
+          unless %w(1 2).include? params[:use_type].to_s
+            return render_error(-4, '不正确的红包用途参数，值为1或2')
+          end
+          
+          if user.balance < params[:money] 
+            return render_error(1001, '余额不足，请先充值')
+          end
+          
+          # 红包模板
+          if params[:theme_id]
+            theme = RedpackTheme.find_by(uniq_id: params[:theme_id])
+            if theme.blank?
+              return render_error(4004, '红包模板不存在')
+            end
+          else
+            # 取第一个默认模板
+            theme = RedpackTheme.where(opened: true).first
+          end
+          
+          # 红包音效
+          if params[:audio_id]
+            audio = RedpackAudio.find_by(uniq_id: params[:audio_id])
+            if audio.blank?
+              return render_error(4004, '红包音效不存在')
+            end
+          else
+            audio = nil
+          end
+          
+          sign = []
+          if params[:sign]
+            sign = params[:sign].split(',')
+          end
+          
+          redpack = Redpack.create!(owner_id: user.uid, 
+                                    total_money: params[:money], 
+                                    total_count: params[:quantity],
+                                    _type: params[:_type],
+                                    use_type: params[:use_type],
+                                    subject: params[:subject],
+                                    sign: sign,
+                                    theme_id: theme.uniq_id,
+                                    audio_id: audio.try(:uniq_id)
+                                    )
+          user.balance -= params[:money]
+          user.save!
+          
+          render_json(redpack, API::V1::Entities::Redpack)
+        end # end post create
+        
         desc "红包浏览"
         params do
           optional :token, type: String, desc: '用户TOKEN'

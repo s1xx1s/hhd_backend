@@ -3,13 +3,55 @@ module API
   module V1
     class CatalogsAPI < Grape::API
       
-      resource :catalogs, desc: '分类接口' do
+      resource :catalogs, desc: '分类相关接口' do
         desc '获取分类'
         get do
           @catalogs = Catalog.where(opened: true).order('sort asc, id desc')
           render_json(@catalogs, API::V1::Entities::Catalog)
         end # end get /
       end # end resource
+      
+      resource :themes, desc: '红包模板相关接口' do
+        desc '获取某个分类下面的所有模板'
+        params do
+          requires :cid, type: Integer, desc: '分类ID'
+          optional :token, type: String, desc: '用户认证TOKEN'
+        end
+        get do
+          @catalog = Catalog.find_by(uniq_id: params[:cide])
+          if @catalog.blank?
+            return render_error(4004, '分类不存在')
+          end
+          
+          @themes = RedpackTheme.where(opened: true)
+            .where("'#{@catalog.uniq_id}' = ANY (tags)")
+            .order('sort asc, id desc')
+            
+          render_json(@themes, API::V1::Entities::RedpackTheme)
+          
+        end # end /
+      end # end resource
+        
+      resource :audios, desc: '红包音效相关接口' do
+        desc '获取某个分类下面的所有音效'
+        params do
+          requires :cid, type: Integer, desc: '分类ID'
+          optional :token, type: String, desc: '用户认证TOKEN'
+        end
+        get do
+          @catalog = Catalog.find_by(uniq_id: params[:cide])
+          if @catalog.blank?
+            return render_error(4004, '分类不存在')
+          end
+        
+          @audios = RedpackAudio.where(opened: true)
+            .where("'#{@catalog.uniq_id}' = ANY (tags)")
+            .order('sort asc, id desc')
+          
+          render_json(@audios, API::V1::Entities::RedpackAudio)
+        
+        end # end /
+      end #end resource
 
     end # end class
   end

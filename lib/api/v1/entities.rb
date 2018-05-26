@@ -165,6 +165,22 @@ module API
         expose :name
       end
       
+      class RedpackTheme < Base
+        expose :uniq_id, as: :id
+        expose :name
+        expose :icon do |model, opts|
+          model.icon.blank? ? '' : model.icon.url(:small)
+        end
+      end
+      
+      class RedpackAudio < Base
+        expose :uniq_id, as: :id
+        expose :name
+        expose :file do |model, opts|
+          model.file.url
+        end
+      end
+      
       class Redpack < Base
         expose :uniq_id, as: :id
         expose :subject
@@ -172,14 +188,17 @@ module API
           model.redpack_image_url
         end
         expose :audio do |model, opts|
-          if model.bg_audio.blank?
+          if model.audio.blank?
             ''
           else
-            model.bg_audio.url
+            model.audio.file.url
           end
         end
         expose :has_sign do |model, opts|
           model.sign.any?
+        end
+        expose :is_cash do |model, opts|
+          model.use_type == 1
         end
         expose :user, as: :owner, using: API::V1::Entities::User
       end
