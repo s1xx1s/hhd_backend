@@ -37,8 +37,10 @@ module API
             return render_error(-4, '不正确的红包用途参数，值为1或2')
           end
           
-          if user.balance < params[:money] 
-            return render_error(1001, '余额不足，请先充值')
+          if params[:use_type].to_i == 1 # 现金红包需要检查余额
+            if user.balance < params[:money] 
+              return render_error(1001, '余额不足，请先充值')
+            end
           end
           
           # 红包模板
@@ -72,7 +74,7 @@ module API
                                     total_count: params[:quantity],
                                     _type: params[:_type],
                                     use_type: params[:use_type],
-                                    subject: params[:subject],
+                                    subject: params[:subject] || '恭喜发财，大吉大利',
                                     sign: sign,
                                     theme_id: theme.uniq_id,
                                     audio_id: audio.try(:uniq_id)
