@@ -17,7 +17,7 @@ index do
     image_tag o.redpack_image_url
   end
   column '红包音效' do |o|
-    o.audio.blank? '--' : raw("<audio src=\"#{o.audio.file.url}\" controls=\"controls\"></audio><p>#{o.audio.name}</p>")
+    o.audio.blank? ? '--' : raw("<audio src=\"#{o.audio.file.url}\" controls=\"controls\"></audio><p>#{o.audio.name}</p>")
   end
   column '总金额/总个数' do |o|
     raw("#{o.total_money / 100.0}<br>#{o.total_count}")
