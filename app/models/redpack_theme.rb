@@ -29,7 +29,7 @@ class RedpackTheme < ActiveRecord::Base
   end
   
   def owner
-    @owner ||= User.find_by(uniq_id: self.owner_id)
+    @owner ||= User.find_by(uid: self.owner_id)
   end
   
   def self.watermark_pos_data

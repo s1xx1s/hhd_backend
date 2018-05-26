@@ -3,14 +3,25 @@ ActiveAdmin.register RedpackAudio do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :name, :file, :sort, :opened, :owner_id, { tags: [] }
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+
+index do
+  selectable_column
+  column '#', :id
+  column 'ID', :uniq_id
+  column :name
+  column '音效文件' do |o|
+    raw("<audio src=\"#{o.file.url}\" controls=\"controls\"></audio>")
+  end
+  column :tags
+  column '所有者' do |o|
+    o.owner.try(:format_nickname) || '--'
+  end
+  column :sort
+  column :opened
+  column 'at', :created_at
+  
+  actions
+end
 
 form html: { multipart: true } do |f|
   f.semantic_errors

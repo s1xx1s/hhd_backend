@@ -27,4 +27,8 @@ class RedpackAudio < ActiveRecord::Base
     end
   end
   
+  def owner
+    @owner ||= User.find_by(uid: self.owner_id)
+  end
+  
 end

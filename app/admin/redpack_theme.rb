@@ -9,11 +9,12 @@ index do
   column '#', :id
   column 'ID', :uniq_id
   column :name
-  column '红包封面' do |o|
-    image_tag o.cover.url(:small)
+  column '红包ICON' do |o|
+    image_tag o.icon.url(:small)
   end
-  column '所属商家' do |o|
-    o.merchant.try(:name) || '--'
+  column :tags
+  column '所有者' do |o|
+    o.owner.try(:format_nickname) || '--'
   end
   column '二维码位置/二维码设置' do |o|
     raw("#{o.qrcode_watermark_pos}<br>#{o.qrcode_watermark_config}")
@@ -21,6 +22,7 @@ index do
   column '文字水印位置/文字水印设置' do |o|
     raw("#{o.text_watermark_pos}<br>#{o.text_watermark_config}")
   end
+  column :sort
   column :opened
   column 'at', :created_at
   
