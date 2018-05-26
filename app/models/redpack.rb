@@ -19,11 +19,15 @@ class Redpack < ActiveRecord::Base
   end
   
   def user
-    @user ||= User.find_by(uid: self.user_id)
+    @user ||= User.find_by(uid: self.owner_id)
   end
   
   def theme
     @theme ||= RedpackTheme.find_by(uniq_id: self.theme_id)
+  end
+  
+  def audio
+    @audio ||= RedpackAudio.find_by(uniq_id: self.audio_id)
   end
   
   validate :total_money_large_sent_money
