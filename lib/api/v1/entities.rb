@@ -160,6 +160,11 @@ module API
         expose :answers
       end
       
+      class Catalog < Base
+        expose :uniq_id, as: :id
+        expose :name
+      end
+      
       class Redpack < Base
         expose :uniq_id, as: :id
         expose :subject
