@@ -10,7 +10,7 @@ class CreateRedpacks < ActiveRecord::Migration
       t.integer :total_count, null: false # 红包个数
       t.integer :sent_count, default: 0   # 已发红包数
       t.integer :min_value # 红包最小值
-      t.integer :use_type, null: false # 红包使用类型，1表示微信现金红包 2表示支付宝现金红包 3非现金红包
+      t.integer :use_type, null: false # 红包使用类型，1 现金红包 2 非现金红包
       t.integer :theme_id, null: false # 红包主题
       t.boolean :opened, default: true
 

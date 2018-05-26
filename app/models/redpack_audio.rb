@@ -28,8 +28,8 @@ class RedpackAudio < ActiveRecord::Base
   end
   
   def tag_names
-    @tags = Catalog.where(uniq_id: self.tags)
-    @tags.join(',')
+    @tag_names = Catalog.where(uniq_id: self.tags).pluck(:name)
+    @tag_names.join(',')
   end
   
   def owner
