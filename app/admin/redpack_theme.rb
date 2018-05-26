@@ -12,7 +12,9 @@ index do
   column '红包ICON' do |o|
     image_tag o.icon.url(:small)
   end
-  column :tags
+  column :tags do |o|
+    o.tag_names
+  end
   column '所有者' do |o|
     o.owner.try(:format_nickname) || '--'
   end

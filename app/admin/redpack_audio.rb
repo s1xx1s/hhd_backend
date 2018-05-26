@@ -12,7 +12,9 @@ index do
   column '音效文件' do |o|
     raw("<audio src=\"#{o.file.url}\" controls=\"controls\"></audio>")
   end
-  column :tags
+  column :tags do |o|
+    o.tag_names
+  end
   column '所有者' do |o|
     o.owner.try(:format_nickname) || '--'
   end

@@ -28,6 +28,11 @@ class RedpackTheme < ActiveRecord::Base
     end
   end
   
+  def tag_names
+    @tags = Catalog.where(uniq_id: self.tags)
+    @tags.join(',')
+  end
+  
   def owner
     @owner ||= User.find_by(uid: self.owner_id)
   end
