@@ -44,6 +44,7 @@
       redpack_theme: '红包模板'
       redpack_view_log: '红包浏览记录'
       redpack_send_log: '抢红包记录'
+      catalog: '分类'
     attributes:
       user:
         uid: 'ID'
@@ -227,6 +228,10 @@
         take_audio: '抢红包背景音乐'
         result_audio: '红包结果声音'
         merch_id: '所属商家'
+      catalog:
+        name: '名称'
+        sort: '显示顺序'
+        opened: '是否使用'
     errors:
       models:
         user: "用户"
