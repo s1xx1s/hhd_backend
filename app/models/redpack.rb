@@ -1,5 +1,5 @@
 class Redpack < ActiveRecord::Base
-  validates :merch_id, :total_money, :sent_count, :use_type, :theme_id, presence: true
+  validates :owner_id, :total_money, :sent_count, :use_type, :theme_id, presence: true
   
   mount_uploader :bg_audio, AudioUploader
   
@@ -38,16 +38,16 @@ class Redpack < ActiveRecord::Base
     end
   end
   
-  validate :check_min_value_if_is_cash
-  def check_min_value_if_is_cash
-    if self.use_type < 3
-      # puts self.min_value
-      if self.min_value.blank? or self.min_value < limit_min_value
-        errors.add(:base, "现金红包最小值不能低于#{limit_min_value / 100}元")
-        return false
-      end
-    end
-  end
+  # validate :check_min_value_if_is_cash
+  # def check_min_value_if_is_cash
+  #   if self.use_type == 1
+  #     # puts self.min_value
+  #     if self.min_value.blank? or self.min_value < limit_min_value
+  #       errors.add(:base, "现金红包最小值不能低于#{limit_min_value / 100}元")
+  #       return false
+  #     end
+  #   end
+  # end
   
   def limit_min_value
     if self.use_type == 1
