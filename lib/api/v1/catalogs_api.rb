@@ -18,7 +18,7 @@ module API
           optional :token, type: String, desc: '用户认证TOKEN'
         end
         get do
-          @catalog = Catalog.find_by(uniq_id: params[:cide])
+          @catalog = Catalog.find_by(uniq_id: params[:cid])
           if @catalog.blank?
             return render_error(4004, '分类不存在')
           end
@@ -39,7 +39,7 @@ module API
           optional :token, type: String, desc: '用户认证TOKEN'
         end
         get do
-          @catalog = Catalog.find_by(uniq_id: params[:cide])
+          @catalog = Catalog.find_by(uniq_id: params[:cid])
           if @catalog.blank?
             return render_error(4004, '分类不存在')
           end
