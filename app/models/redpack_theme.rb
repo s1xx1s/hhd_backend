@@ -1,6 +1,7 @@
 class RedpackTheme < ActiveRecord::Base
-  validates :cover, :qrcode_watermark_pos, :qrcode_watermark_config, :text_watermark_pos,:text_watermark_config, presence: true
+  validates :icon, :cover, :qrcode_watermark_pos, :qrcode_watermark_config, :text_watermark_pos,:text_watermark_config, presence: true
   
+  mount_uploader :icon, CoverImageUploader
   mount_uploader :cover, CoverImageUploader
   
   before_create :generate_unique_id
@@ -14,8 +15,21 @@ class RedpackTheme < ActiveRecord::Base
     end while self.class.exists?(:uniq_id => uniq_id)
   end
   
-  def merchant
-    @merchant ||= Merchant.find_by(uniq_id: self.merch_id)
+  before_save :remove_blank_value_for_array
+  def remove_blank_value_for_array
+    self.tags = self.tags.compact.reject(&:blank?)
+  end
+  
+  validate :required_tags
+  def required_tags
+    if tags.empty?
+      errors.add(:base, '至少选择一个分类')
+      return
+    end
+  end
+  
+  def owner
+    @owner ||= User.find_by(uniq_id: self.owner_id)
   end
   
   def self.watermark_pos_data

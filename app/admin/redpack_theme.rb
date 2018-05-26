@@ -2,15 +2,7 @@ ActiveAdmin.register RedpackTheme do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :merch_id, :cover, :name, :qrcode_watermark_pos, :qrcode_watermark_config, :text_watermark_pos, :text_watermark_config, :opened, :sort
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+permit_params :owner_id, :icon, :cover, :name, :qrcode_watermark_pos, :qrcode_watermark_config, :text_watermark_pos, :text_watermark_config, :opened, :sort, { tags: [] }
 
 index do
   selectable_column
@@ -38,8 +30,10 @@ end
 form html: { multipart: true } do |f|
   f.semantic_errors
   f.inputs '基本信息' do
-    f.input :merch_id, as: :select, label: '所属商家', collection: Merchant.where(opened: true).map { |merch| [merch.name, merch.uniq_id] }
+    f.input :icon
     f.input :cover
+    f.input :tags, as: :check_boxes, label: '所属分类', collection: Catalog.where(opened: true).map { |a| [a.name, a.uniq_id] }, required: true
+    f.input :owner_id, as: :select, label: '所属用户', collection: User.where(verified: true).map { |user| [user.format_nickname, user.uid] }
     f.input :name, placeholder: '模板名称'
     f.input :sort, label: '显示顺序', hint: '值越大显示越靠前'
     f.input :opened, label: '启用该模板'
