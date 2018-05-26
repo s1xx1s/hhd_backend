@@ -128,9 +128,13 @@ class Redpack < ActiveRecord::Base
     if theme.blank?
       ''
     else
-      qrcode_image_url = "#{SiteConfig.main_server}/qrcode?text=#{SiteConfig.main_server}/redpack?id=#{self.uniq_id}"
+      qrcode_image_url = "#{SiteConfig.main_server}/qrcode?text=#{self.detail_url}"
       theme.watermark_image(qrcode_image_url, self.subject || '恭喜发财，大吉大利')
     end
+  end
+  
+  def detail_url
+    "#{SiteConfig.front_url}/?rid=#{self.uniq_id}"
   end
   
   def add_view_count

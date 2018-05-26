@@ -194,6 +194,7 @@ module API
             model.audio.file.url
           end
         end
+        expose :detail_url
         expose :has_sign do |model, opts|
           model.sign.any?
         end
