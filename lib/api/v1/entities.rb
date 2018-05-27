@@ -194,10 +194,14 @@ module API
         expose :is_cash do |model, opts|
           model.use_type == 1
         end
+        expose :in_use do |model, opts|
+          model.opened
+        end
         expose :total_money, format_with: :rmb_format
         expose :total_count
         expose :sent_money, format_with: :rmb_format
         expose :sent_count
+        expose :created_at, as: :time, format_with: :chinese_date
       end
       
       class Redpack < SimpleRedpack
