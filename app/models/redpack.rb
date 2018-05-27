@@ -151,6 +151,10 @@ class Redpack < ActiveRecord::Base
     self.total_money > self.sent_money
   end
   
+  def calc_min_value
+    @calc_min_value ||= (self.total_money.to_f / self.total_count).floor
+  end
+  
   private
   def _calc_random_money
     remain_size = self.total_count - self.sent_count
@@ -166,7 +170,7 @@ class Redpack < ActiveRecord::Base
     
     tmp_remain_money = remain_money.to_f / 100.00
     
-    min = self.min_value || Math.floor(self.total_money.to_f / self.total_count)
+    min = self.min_value || calc_min_value
     
     tmp_min = min.to_f / 100.00
     
