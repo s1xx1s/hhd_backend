@@ -86,6 +86,9 @@ class User < ActiveRecord::Base
   end
   
   def create_redpack_operation!(hb, action, has_trade)
+    hb.opened = action == 'open'
+    hb.save!
+    
     UserRedpackOperation.create!(user_id: self.uid, redpack_id: hb.uniq_id, action: action)
     if has_trade
       money = action == 'open' ? -hb.left_money : hb.left_money
