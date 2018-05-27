@@ -243,6 +243,27 @@ module API
           
         end # end vip active
         
+        desc "获取已经抢到的红包"
+        params do
+          requires :token, type: String, desc: '用户TOKEN'
+          requires :action, type: String, desc: '获取跟用户相关的红包，值为taked或者sent'
+        end
+        get '/:action/redpacks' do
+          user = authenticate!
+          
+          unless %w(taked sent).include? params[:action]
+            return render_error(-1, '不正确的action参数，值只能为taked或sent')
+          end
+          
+          if params[:action] == 'taked'
+            redpack_logs = RedpackSendLog.where(user_id: user.uid).order('created_at desc')
+            render_json(redpack_logs, API::V1::Entities::RedpackSendLogDetail)
+          else
+            redpacks = Redpack.where(owner_id: user.uid).order('created_at desc')
+            render_json(redpacks, API::V1::Entities::Redpack)
+          end
+        end # end get redpackes
+        
       end # end user resource
       
     end 

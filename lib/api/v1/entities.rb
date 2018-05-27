@@ -214,6 +214,10 @@ module API
         expose :user, using: API::V1::Entities::User
       end
       
+      class RedpackSendLogDetail < RedpackSendLog
+        expose :redpack, using: API::V1::Entities::Redpack
+      end
+      
       class SignRule < Base
         expose :name do |model, opts|
           '口令红包'
