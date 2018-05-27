@@ -265,7 +265,7 @@ module API
           if params[:action] == 'taked'
             redpack_logs = RedpackSendLog.where(user_id: user.uid).order('created_at desc')
             if params[:year]
-              redpack_logs = redpack_logs.where('created_at like ?', "%#{params[:year]}" )
+              redpack_logs = redpack_logs.where('extract(year from created_at) = ?', params[:year] )
             end
             
             # 获取抢到的现金红包
@@ -273,8 +273,8 @@ module API
             no_cash_redpack_logs = RedpackSendLog.joins('inner join redpacks on redpacks.uniq_id = redpack_send_logs.redpack_id').where('redpacks.use_type = 2').where(user_id: user.uid)
             
             if params[:year]
-              cash_redpack_logs = cash_redpack_logs.where('redpack_send_logs.created_at like ?', "%#{params[:year]}")    
-              no_cash_redpack_logs = cash_redpack_logs.where('redpack_send_logs.created_at like ?', "%#{params[:year]}")
+              cash_redpack_logs = cash_redpack_logs.where('extract(year from redpack_send_logs.created_at) = ?', params[:year])    
+              no_cash_redpack_logs = cash_redpack_logs.where('extract(year from redpack_send_logs.created_at) = ?', params[:year])
             end
             
             cash_redpack_money = cash_redpack_logs.map { |log| log.money }.sum
@@ -297,7 +297,7 @@ module API
             redpacks = Redpack.where(owner_id: user.uid).order('created_at desc')
             
             if params[:year]
-              redpacks = redpacks.where('created_at like ?', "%#{params[:year]}" )
+              redpacks = redpacks.where('extract(year from created_at) = ?', params[:year] )
             end
             
             cash_redpacks = redpacks.where(use_type: 1)
