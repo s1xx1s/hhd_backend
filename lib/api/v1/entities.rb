@@ -237,6 +237,9 @@ module API
         end
         expose :created_at, as: :time, format_with: :chinese_datetime
         expose :redpack, using: API::V1::Entities::SimpleRedpack
+        expose :hb_sender, using: API::V1::Entities::User do |model, opts|
+          model.redpack.try(:user)
+        end
       end
       
       class SignRule < Base
