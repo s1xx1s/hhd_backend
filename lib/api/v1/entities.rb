@@ -5,6 +5,7 @@ module API
         format_with(:null) { |v| v.blank? ? "" : v }
         format_with(:chinese_date) { |v| v.blank? ? "" : v.strftime('%Y-%m-%d') }
         format_with(:chinese_datetime) { |v| v.blank? ? "" : v.strftime('%Y-%m-%d %H:%M:%S') }
+        format_with(:month_date_time) { |v| v.blank? ? "" : v.strftime('%m月%d日 %H:%M') }
         format_with(:money_format) { |v| v.blank? ? 0.00 : ('%.2f' % v) }
         format_with(:rmb_format) { |v| v.blank? ? 0.00 : ('%.2f' % (v / 100.00)) }
         expose :id
@@ -201,7 +202,7 @@ module API
         expose :total_count
         expose :sent_money, format_with: :rmb_format
         expose :sent_count
-        expose :created_at, as: :time, format_with: :chinese_date
+        expose :created_at, as: :time, format_with: :month_date_time
       end
       
       class Redpack < SimpleRedpack
@@ -242,7 +243,7 @@ module API
         expose :money, format_with: :money_format do |model, opts|
           model.money / 100.0
         end
-        expose :created_at, as: :time, format_with: :chinese_datetime
+        expose :created_at, as: :time, format_with: :month_date_time
         expose :redpack, using: API::V1::Entities::SimpleRedpack
         expose :hb_sender, using: API::V1::Entities::User do |model, opts|
           model.redpack.try(:user)
