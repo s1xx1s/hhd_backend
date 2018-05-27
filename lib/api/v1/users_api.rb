@@ -273,8 +273,8 @@ module API
             no_cash_redpack_logs = RedpackSendLog.joins('inner join redpacks on redpacks.uniq_id = redpack_send_logs.redpack_id').where('redpacks.use_type = 2').where(user_id: user.uid)
             
             if params[:year]
-              cash_redpack_logs = cash_redpack_logs.where('created_at like ?', "%#{params[:year]}")    
-              no_cash_redpack_logs = cash_redpack_logs.where('created_at like ?', "%#{params[:year]}")
+              cash_redpack_logs = cash_redpack_logs.where('redpack_send_logs.created_at like ?', "%#{params[:year]}")    
+              no_cash_redpack_logs = cash_redpack_logs.where('redpack_send_logs.created_at like ?', "%#{params[:year]}")
             end
             
             cash_redpack_money = cash_redpack_logs.map { |log| log.money }.sum
