@@ -188,6 +188,9 @@ module API
         expose :has_sign do |model, opts|
           model.sign.any?
         end
+        expose :is_pin do |model, opts|
+          model._type == 0
+        end
         expose :is_cash do |model, opts|
           model.use_type == 1
         end
