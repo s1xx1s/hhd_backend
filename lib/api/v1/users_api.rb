@@ -243,10 +243,11 @@ module API
           
         end # end vip active
         
-        desc "获取已经抢到的红包"
+        desc "获取已经抢到的/发出的红包"
         params do
           requires :token, type: String, desc: '用户TOKEN'
           requires :action, type: String, desc: '获取跟用户相关的红包，值为taked或者sent'
+          optional :year, type: String, desc: '取某一年的数据'
         end
         get '/:action/redpacks' do
           user = authenticate!
@@ -257,9 +258,18 @@ module API
           
           if params[:action] == 'taked'
             redpack_logs = RedpackSendLog.where(user_id: user.uid).order('created_at desc')
+            if params[:year]
+              redpack_logs = redpack_logs.where('created_at like ?', "%#{params[:year]}" )
+            end
+            
             render_json(redpack_logs, API::V1::Entities::RedpackSendLogDetail)
           else
             redpacks = Redpack.where(owner_id: user.uid).order('created_at desc')
+            
+            if params[:year]
+              redpacks = redpacks.where('created_at like ?', "%#{params[:year]}" )
+            end
+            
             render_json(redpacks, API::V1::Entities::Redpack)
           end
         end # end get redpackes
