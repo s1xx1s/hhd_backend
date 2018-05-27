@@ -1,7 +1,7 @@
 class Redpack < ActiveRecord::Base
   validates :owner_id, :total_money, :sent_count, :use_type, :theme_id, presence: true
   
-  mount_uploader :bg_audio, AudioUploader
+  # mount_uploader :bg_audio, AudioUploader
   
   before_create :generate_unique_id
   def generate_unique_id
@@ -48,6 +48,14 @@ class Redpack < ActiveRecord::Base
   #     end
   #   end
   # end
+  
+  def is_cash?
+    self.use_type == 1
+  end
+  
+  def left_money
+    self.total_money - self.sent_money
+  end
   
   def limit_min_value
     if self.use_type == 1

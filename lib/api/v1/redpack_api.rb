@@ -79,8 +79,14 @@ module API
                                     theme_id: theme.uniq_id,
                                     audio_id: audio.try(:uniq_id)
                                     )
-          user.balance -= params[:money]
-          user.save!
+          # 记录交易日志
+          TradeLog.create!(user_id: user.uid, 
+                           title: "发出一个#{redpack.is_cash? ? '现金' : '消费'}红包", 
+                           money: redpack.total_money, 
+                           action: "sent_hb",
+                           tradeable_type: redpack.class,
+                           tradeable_id: redpack.uniq_id
+                           )
           
           render_json(redpack, API::V1::Entities::Redpack)
         end # end post create
@@ -192,8 +198,35 @@ module API
           # { code: 0, message: 'ok', data: { id: log.uniq_id } }
           render_json(log, API::V1::Entities::RedpackSendLog)
           
-        end # end post grab
+        end # end post take
         
+        desc "打开、关闭红包"
+        params do
+          requires :token, type: String,  desc: '用户TOKEN'
+          requires :id,    type: Integer, desc: '红包ID'
+          requires :action,type: String,  desc: '值为：open,close之一'
+        end
+        post '/:action' do
+          user = authenticate!
+          
+          hb = Redpack.find_by(uniq_id: params[:id])
+          if hb.blank?
+            return render_error(4004, '红包不存在')
+          end
+          
+          unless %w(open close).include? params[:action]
+            return render_error(-1, 'action参数不正确，值为open或close')
+          end
+          
+          error_msg = user.send("#{params[:action]}_redpack".to_sym,hb)
+          if error_msg.blank?
+            render_json_no_data
+          else
+            render_error(5001, error_msg)
+          end
+          
+        end # end post open or close
+                
       end # end resource
       
     end

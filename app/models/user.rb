@@ -47,6 +47,58 @@ class User < ActiveRecord::Base
     end
   end
   
+  def open_redpack(hb)
+    if hb.is_cash?
+      # 现金红包如果还没被抢完，那么重新开启红包，会从用户余额扣除来支付该红包剩下的费用
+      if hb.left_money > 0 # 红包还未领完
+        if self.balance < left_money
+          return '余额不足，请先充值'
+        else
+          self.create_redpack_operation!(hb, 'open', true)
+          return nil
+        end
+      else
+        self.create_redpack_operation!(hb, 'open',false)
+        return nil
+      end
+    else
+      # 如果是消费红包，直接进行开启功能
+      self.create_redpack_operation!(hb, 'open', false)
+      return nil
+    end
+  end
+  
+  def close_redpack(hb)
+    if hb.is_cash?
+      # 现金红包如果还没被抢完，那么关闭红包，会将剩余红包金额存入余额
+      if hb.left_money > 0 # 红包还未领完
+        self.create_redpack_operation!(hb, 'close', true)
+        return nil
+      else
+        self.create_redpack_operation!(hb, 'close',false)
+        return nil
+      end
+    else 
+      # 如果是消费红包，直接进行开启功能
+      self.create_redpack_operation!(hb, 'close', false)
+      return nil
+    end
+  end
+  
+  def create_redpack_operation!(hb, action, has_trade)
+    UserRedpackOperation.create!(user_id: self.uid, redpack_id: hb.uniq_id, action: action)
+    if has_trade
+      money = action == 'open' ? -hb.left_money : hb.left_money
+      TradeLog.create!(user_id: self.uid, 
+                       title: I18n.t(action) + '红包', 
+                       money: money, 
+                       action: "#{action}_hb",
+                       tradeable_type: hb.class,
+                       tradeable_id: hb.uniq_id
+                       )
+    end
+  end
+  
   def left_days
     if self.vip_expired_at.blank?
       '成为会员'

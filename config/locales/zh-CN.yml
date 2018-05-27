@@ -12,6 +12,8 @@
     canceled: '已取消'
     completed: '已结束'
     grab_tip: '无'
+    open: '打开'
+    close: '关闭'
     # SignRule:
     #   title: '口令红包'
     #   grab_tip: '注意：只有一次答题的机会！'
