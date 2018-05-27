@@ -256,13 +256,43 @@ module API
             return render_error(-1, '不正确的action参数，值只能为taked或sent')
           end
           
+          user_json = {
+            id: user.uid,
+            nickname: user.format_nickname,
+            avatar: user.format_avatar_url
+          }
+          
           if params[:action] == 'taked'
             redpack_logs = RedpackSendLog.where(user_id: user.uid).order('created_at desc')
             if params[:year]
               redpack_logs = redpack_logs.where('created_at like ?', "%#{params[:year]}" )
             end
             
-            render_json(redpack_logs, API::V1::Entities::RedpackSendLogDetail)
+            # 获取抢到的现金红包
+            cash_redpack_logs = RedpackSendLog.joins('inner join redpacks on redpacks.uniq_id = redpack_send_logs.redpack_id').where('redpacks.use_type = 1').where(user_id: user.uid)
+            no_cash_redpack_logs = RedpackSendLog.joins('inner join redpacks on redpacks.uniq_id = redpack_send_logs.redpack_id').where('redpacks.use_type = 2').where(user_id: user.uid)
+            
+            if params[:year]
+              cash_redpack_logs = cash_redpack_logs.where('created_at like ?', "%#{params[:year]}")    
+              no_cash_redpack_logs = cash_redpack_logs.where('created_at like ?', "%#{params[:year]}")
+            end
+            
+            cash_redpack_money = cash_redpack_logs.map { |log| log.money }.sum
+            cash_redpack_count = cash_redpack_logs.size
+            
+            no_cash_redpack_money = no_cash_redpack_logs.map { |log| log.money }.sum
+            no_cash_redpack_count = no_cash_redpack_logs.size
+            
+            user_json['c_money'] = '%.2f' % (cash_redpack_money / 100.00)
+            user_json['c_count'] = cash_redpack_count
+            user_json['nc_money'] = '%.2f' % (no_cash_redpack_money / 100.00)
+            user_json['nc_count'] = no_cash_redpack_count
+            
+            { code: 0, message: 'ok', data: { 
+              user: user_json, 
+              list: API::V1::Entities::SimpleRedpackSendLog.represent(redpack_logs) 
+              } }
+            # render_json(redpack_logs, API::V1::Entities::RedpackSendLogDetail)
           else
             redpacks = Redpack.where(owner_id: user.uid).order('created_at desc')
             
@@ -270,7 +300,26 @@ module API
               redpacks = redpacks.where('created_at like ?', "%#{params[:year]}" )
             end
             
-            render_json(redpacks, API::V1::Entities::Redpack)
+            cash_redpacks = redpacks.where(use_type: 1)
+            no_cash_redpacks = redpacks.where(use_type: 2)
+            
+            cash_money = cash_redpacks.map { |r| r.total_money }.sum
+            cash_count = cash_redpacks.size
+            
+            no_cash_money = no_cash_redpacks.map { |r| r.total_money }.sum
+            no_cash_count = no_cash_redpacks.size
+            
+            user_json['c_money'] = '%.2f' % (cash_money / 100.00)
+            user_json['c_count'] = cash_count
+            user_json['nc_money'] = '%.2f' % (no_cash_money / 100.00)
+            user_json['nc_count'] = no_cash_count
+            
+            { code: 0, message: 'ok', data: { 
+              user: user_json, 
+              list: API::V1::Entities::SimpleRedpack.represent(redpacks) 
+              } }
+              
+            # render_json(redpacks, API::V1::Entities::Redpack)
           end
         end # end get redpackes
         
