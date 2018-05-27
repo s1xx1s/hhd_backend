@@ -18,9 +18,11 @@ class TradeLog < ActiveRecord::Base
         user.save!
       else
         # 非现金红包修改用户的抵扣余额
-        pay_money = user.pay_money + self.money
-        user.pay_money = MAX(0, pay_money)
-        user.save!
+        if self.action == 'taked_hb' # 只有抢消费红包才修改用户的抵扣余额
+          pay_money = user.pay_money + self.money
+          user.pay_money = MAX(0, pay_money)
+          user.save!
+        end
       end
     else
       # 充值或提现直接操作余额
