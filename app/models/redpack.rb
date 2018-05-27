@@ -166,7 +166,7 @@ class Redpack < ActiveRecord::Base
     
     tmp_remain_money = remain_money.to_f / 100.00
     
-    min = self.min_value || 5
+    min = self.min_value || Math.floor(self.total_money.to_f / self.total_count)
     
     tmp_min = min.to_f / 100.00
     
