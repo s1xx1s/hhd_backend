@@ -344,7 +344,7 @@ module API
           total_money = @consumes.map { |c| c.money }.sum
           
           { code: 0, message: 'ok', data: {
-            total_money: '%.2f' % (total_money.to_f / 100.00)
+            total_money: '%.2f' % (total_money.to_f / 100.00),
             list: API::V1::Entities::RedpackConsume.represent(@consumes, { action: params[:action] })
           } }
           
