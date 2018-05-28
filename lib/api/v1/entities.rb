@@ -188,6 +188,12 @@ module API
         end
       end
       
+      class UserPreviewLog < Base
+        expose :uniq_id, as: :id
+        expose :theme_url
+        expose :audio_url
+      end
+      
       class SimpleRedpack < Base
         expose :uniq_id, as: :id
         expose :subject

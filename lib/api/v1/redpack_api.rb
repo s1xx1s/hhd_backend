@@ -91,6 +91,40 @@ module API
           render_json(redpack, API::V1::Entities::Redpack)
         end # end post create
         
+        desc "红包预览"
+        params do
+          requires :token,    type: String, desc: '用户TOKEN'
+          optional :subject,  type: String, desc: '红包留言'
+          optional :theme_id, type: Integer, desc: '红包模板'
+          optional :audio_id, type: Integer, desc: '红包模板'
+        end
+        post :preview do
+          user = authenticate!
+          
+          @log = UserPreviewLog.create!(user_id: params[:token], 
+                                        subject: params[:subject],
+                                        theme_id: params[:theme_id],
+                                        audio_id: params[:audio_id]
+                                        )
+          render_json(@log, API::V1::Entities::UserPreviewLog)
+          # UserPreviewLog
+        end # end preview
+        
+        desc "红包预览确认使用"
+        params do
+          requires :token,type: String, desc: '用户TOKEN'
+          requires :id,   type: String, desc: '红包预览ID'
+        end
+        post 'preview/use' do
+          authenticate!
+          
+          @log = UserPreviewLog.find_by(uniq_id: params[:id])
+          @log.in_use = true
+          @log.save!
+          
+          render_json_no_data
+        end # end preview/use
+        
         desc "红包浏览"
         params do
           optional :token, type: String, desc: '用户TOKEN'
