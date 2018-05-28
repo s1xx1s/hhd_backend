@@ -316,7 +316,7 @@ module API
             
             { code: 0, message: 'ok', data: { 
               user: user_json, 
-              list: API::V1::Entities::SimpleRedpack.represent(redpacks) 
+              list: API::V1::Entities::EditableRedpack.represent(redpacks) 
               } }
               
             # render_json(redpacks, API::V1::Entities::Redpack)

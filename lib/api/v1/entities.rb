@@ -203,14 +203,17 @@ module API
         expose :sent_money, format_with: :rmb_format
         expose :sent_count
         expose :created_at, as: :time, format_with: :month_date_time
+      end
+      
+      class EditableRedpack < SimpleRedpack
         expose :theme, using: API::V1::Entities::RedpackTheme
         expose :audio, as: :audio_obj, using: API::V1::Entities::RedpackAudio
+        expose :sign do |model, opts|
+          model.sign.join(',')
+        end
       end
       
       class Redpack < SimpleRedpack
-        # expose :uniq_id, as: :id
-        # expose :subject
-        unexpose :theme, :audio_obj
         expose :cover do |model, opts|
           model.redpack_image_url
         end
