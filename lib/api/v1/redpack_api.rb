@@ -329,6 +329,10 @@ module API
             return render_error(4004, '领取的红包记录不存在')
           end
           
+          if user.uid != @log.redpack.try(:owner_id)
+            return render_error(-2, '非法操作!')
+          end
+          
           if @log.money <= 0
             return render_error(6000, '您领取的消费红包金额过低，无法确认消费')
           end
