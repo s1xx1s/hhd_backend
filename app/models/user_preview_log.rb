@@ -12,8 +12,9 @@ class UserPreviewLog < ActiveRecord::Base
       theme = RedpackTheme.where(opened: true).first
     end
     
+    text = self.subject.blank? ? SiteConfig.default_redpack_subject : self.subject
     qrcode_image_url = "#{SiteConfig.main_server}/qrcode?text=红包小屋"
-    theme.watermark_image(qrcode_image_url, self.subject || SiteConfig.default_redpack_subject)
+    theme.watermark_image(qrcode_image_url, text)
   end
   
   def audio_url
