@@ -80,6 +80,7 @@ module API
         expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         expose :left_days, as: :vip_status
         expose :qrcode_url
+        expose :portal_url
         unexpose :private_token, as: :token
         # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         # expose :left_days do |model, opts|

@@ -115,10 +115,10 @@ class User < ActiveRecord::Base
   end
   
   def qrcode_url
-    "#{SiteConfig.main_server}/qrcode?text=#{self.detail_url}"
+    "#{SiteConfig.main_server}/qrcode?text=#{self.portal_url}"
   end
   
-  def detail_url
+  def portal_url
     "#{SiteConfig.front_url}/?uid=#{self.uid}"
   end
   
