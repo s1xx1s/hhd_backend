@@ -14,7 +14,7 @@ module API
           requires :_type, type: Integer, desc: '红包类型，0表示拼手气，1表示普通红包'
           requires :use_type, type: Integer, desc: '红包使用类型；1表示现金红包，2表示非现金红包'
           optional :subject, type: String, desc: '红包主题'
-          optional :sign, type: String, desc: '红包口令，多个口令使用英文逗号分隔（,）'
+          optional :sign_val, type: String, desc: '红包口令，多个口令使用英文逗号分隔（,）'
           optional :theme_id, type: Integer, desc: '红包模板'
           optional :audio_id, type: Integer, desc: '红包音效'
         end
@@ -65,8 +65,8 @@ module API
           end
           
           sign = []
-          if params[:sign]
-            sign = params[:sign].split(',')
+          if params[:sign_val]
+            sign = params[:sign_val].split(',')
           end
           
           redpack = Redpack.create!(owner_id: user.uid, 
@@ -177,7 +177,7 @@ module API
           
           # 口令红包
           if hb.sign.any?
-            if params[:sign].blank? or not hb.sign.include?(params[:sign])
+            if params[:sign_val].blank? or not hb.sign.include?(params[:sign_val])
               return render_error(4000, '口令不正确')
             end
           end
@@ -205,7 +205,7 @@ module API
           requires :token, type: String,  desc: '用户TOKEN'
           requires :id,    type: Integer, desc: '红包ID'
           optional :subject, type: String, desc: '红包留言'
-          optional :sign, type: String, desc: '红包口令'
+          optional :sign_val, type: String, desc: '红包口令'
           optional :theme_id,    type: Integer, desc: '红包模板'
           optional :audio_id,    type: Integer, desc: '红包音效'
         end
@@ -218,14 +218,14 @@ module API
           end
           
           if params[:subject].blank? and 
-             params[:sign].blank? and 
+             params[:sign_val].blank? and 
              params[:theme_id].blank? and 
              params[:audio_id].blank?
             return render_error(-1, '至少需要提交一个修改字段')
           end
           
           old_value = "#{hb.subject}#{hb.sign.join(',')}#{hb.theme_id}#{hb.audio_id}"
-          new_value = "#{params[:subject]}#{params[:sign]}#{params[:theme_id]}#{params[:audio_id]}"
+          new_value = "#{params[:subject]}#{params[:sign_val]}#{params[:theme_id]}#{params[:audio_id]}"
           
           if old_value == new_value
             render_json(hb, API::V1::Entities::SimpleRedpack)
@@ -233,8 +233,8 @@ module API
             # 需要更新红包
             hb.subject = params[:subject]
             
-            if params[:sign]
-              hb.sign = params[:sign].split(',')
+            if params[:sign_val]
+              hb.sign = params[:sign_val].split(',')
             end
             
             # 红包模板
