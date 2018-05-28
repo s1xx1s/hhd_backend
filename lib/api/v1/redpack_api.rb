@@ -316,6 +316,39 @@ module API
           
         end # end get results
         
+        desc "商家确认红包抵扣金额"
+        params do
+          requires :token, type: String,  desc: '用户TOKEN'
+          requires :rrid,  type: String,  desc: '红包结果记录ID'
+        end
+        post :consume do
+          user = authenticate!
+          
+          @log = RedpackSendLog.find_by(uniq_id: params[:rrid])
+          if @log.blank?
+            return render_error(4004, '领取的红包记录不存在')
+          end
+          
+          if @log.money <= 0
+            return render_error(6000, '您领取的消费红包金额过低，无法确认消费')
+          end
+          
+          if RedpackConsume.where(send_log_id: @log.uniq_id, owner_id: user.uid).count > 0
+            return render_error(6001, '您已经确认消费该红包金额，不能重复确认')
+          end
+          
+          
+          
+          RedpackConsume.create!(send_log_id: @log.uniq_id, 
+                                 money: @log.money, 
+                                 owner_id: user.uid, 
+                                 user_id: @log.user_id, 
+                                 redpack_id: @log.redpack_id)
+          
+          render_json_no_data
+          
+        end # end post consume
+        
         desc "打开、关闭红包"
         params do
           requires :token, type: String,  desc: '用户TOKEN'

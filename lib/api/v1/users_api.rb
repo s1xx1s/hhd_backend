@@ -323,6 +323,33 @@ module API
           end
         end # end get redpackes
         
+        desc "获取消费红包抵扣记录"
+        params do
+          requires :token, type: String, desc: '用户TOKEN'
+          requires :action, type: String, desc: '获取跟用户相关的红包，值为confirmed(我抵扣别人的)或者confirming(别人抵扣我的)'
+        end 
+        get '/:action/hb_consumes' do
+          user = authenticate!
+          
+          unless %w(confirmed confirming).include? params[:action]
+            return render_error(-1, '不正确的action参数，值只能为confirmed或confirming')
+          end
+          
+          if params[:action] == 'confirmed'
+            @consumes = RedpackConsume.where(user_id: user.uid).order('created_at desc')
+          else
+            @consumes = RedpackConsume.where(owner_id: user.uid).order('created_at desc')
+          end
+          
+          total_money = @consumes.map { |c| c.money }.sum
+          
+          { code: 0, message: 'ok', data: {
+            total_money: '%.2f' % (total_money.to_f / 100.00)
+            list: API::V1::Entities::RedpackConsume.represent(@consumes, { action: params[:action] })
+          } }
+          
+        end # end get hb_consumes
+        
       end # end user resource
       
     end 

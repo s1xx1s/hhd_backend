@@ -69,6 +69,7 @@ module API
       
       # 用户详情
       class User < UserBase
+        expose :uid, as: :id
         expose :mobile, format_with: :null
         expose :nickname do |model, opts|
           model.format_nickname
@@ -90,11 +91,13 @@ module API
       end
       
       class SimpleUser < Base
+        expose :uid, as: :id
+        expose :mobile, format_with: :null
         expose :nickname do |model, opts|
           model.format_nickname
         end
         expose :avatar do |model, opts|
-          model.real_avatar_url
+          model.format_avatar_url
         end
       end
       
@@ -265,6 +268,15 @@ module API
         expose :hb_sender, using: API::V1::Entities::User do |model, opts|
           model.redpack.try(:user)
         end
+      end
+      
+      class RedpackConsume < Base
+        expose :uniq_id, as: :id
+        expose :money, format_with: :rmb_format
+        expose :user, using: API::V1::Entities::SimpleUser do |model, opts|
+          model.user_for_action(opts[:opts][:action])
+        end
+        expose :created_at, as: :time, format_with: :month_date_time
       end
       
       class SignRule < Base
