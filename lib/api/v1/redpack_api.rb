@@ -266,6 +266,22 @@ module API
           
         end # end post update
         
+        desc "获取抢红包结果"
+        params do
+          requires :id,    type: Integer, desc: '红包ID'
+          optional :token, type: String,  desc: '用户TOKEN'
+        end 
+        get :results do
+          hb = Redpack.find_by(uniq_id: params[:id])
+          if hb.blank?
+            return render_error(4004, '红包不存在')
+          end
+          
+          @logs = RedpackSendLog.where(redpack_id: hb.uniq_id).order('created_at desc')
+          render_json(@logs, API::V1::Entities::RedpackSendLog)
+          
+        end # end get results
+        
         desc "打开、关闭红包"
         params do
           requires :token, type: String,  desc: '用户TOKEN'
