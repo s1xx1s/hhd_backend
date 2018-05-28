@@ -76,6 +76,9 @@ module API
         expose :avatar do |model, opts|
           model.format_avatar_url
         end
+        expose :balance, format_with: :rmb_format
+        expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
+        expose :left_days, as: :vip_status
         unexpose :private_token, as: :token
         # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         # expose :left_days do |model, opts|
@@ -239,7 +242,7 @@ module API
         expose :money, format_with: :money_format do |model, opts|
           model.money / 100.0
         end
-        expose :created_at, as: :time, format_with: :chinese_datetime
+        expose :created_at, as: :time, format_with: :month_date_time
         expose :redpack_owner, as: :hb_owner, using: API::V1::Entities::User, if: proc { |o| o.redpack_owner.present? }
         expose :user, using: API::V1::Entities::User
       end
