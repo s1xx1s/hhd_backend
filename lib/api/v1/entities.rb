@@ -79,6 +79,7 @@ module API
         expose :balance, format_with: :rmb_format
         expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         expose :left_days, as: :vip_status
+        expose :qrcode_url
         unexpose :private_token, as: :token
         # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         # expose :left_days do |model, opts|

@@ -114,6 +114,14 @@ class User < ActiveRecord::Base
     end
   end
   
+  def qrcode_url
+    "#{SiteConfig.main_server}/qrcode?text=#{self.detail_url}"
+  end
+  
+  def detail_url
+    "#{SiteConfig.front_url}/?uid=#{self.uid}"
+  end
+  
   def vip_expired?
     return (self.vip_expired_at.blank? or self.vip_expired_at < Time.zone.now)
   end
