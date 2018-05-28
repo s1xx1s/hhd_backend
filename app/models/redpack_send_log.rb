@@ -28,6 +28,10 @@ class RedpackSendLog < ActiveRecord::Base
     @redpack ||= Redpack.find_by(uniq_id: self.redpack_id)
   end
   
+  def is_cash
+    redpack && redpack.is_cash?
+  end
+  
   def redpack_owner
     redpack.try(:user)
   end
