@@ -208,8 +208,8 @@ module API
       class EditableRedpack < SimpleRedpack
         expose :theme, using: API::V1::Entities::RedpackTheme
         expose :audio, as: :audio_obj, using: API::V1::Entities::RedpackAudio
-        expose :sign do |model, opts|
-          model.sign.join(',')
+        expose :sign_val do |model, opts|
+          model.sign_val
         end
       end
       

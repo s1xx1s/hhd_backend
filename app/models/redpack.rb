@@ -30,6 +30,10 @@ class Redpack < ActiveRecord::Base
     @audio ||= RedpackAudio.find_by(uniq_id: self.audio_id)
   end
   
+  def sign_val
+    self.sign.join(',')
+  end
+  
   validate :total_money_large_sent_money
   def total_money_large_sent_money
     if total_money <= sent_money
