@@ -253,6 +253,7 @@ module API
         expose :money, format_with: :money_format do |model, opts|
           model.money / 100.0
         end
+        expose :qrcode_url
         expose :created_at, as: :time, format_with: :month_date_time
         expose :redpack_owner, as: :hb_owner, using: API::V1::Entities::User, if: proc { |o| o.redpack_owner.present? }
         expose :user, using: API::V1::Entities::User
@@ -263,6 +264,7 @@ module API
         expose :money, format_with: :money_format do |model, opts|
           model.money / 100.0
         end
+        expose :qrcode_url
         expose :created_at, as: :time, format_with: :month_date_time
         expose :redpack, using: API::V1::Entities::SimpleRedpack
         expose :hb_sender, using: API::V1::Entities::User do |model, opts|

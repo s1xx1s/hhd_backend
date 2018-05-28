@@ -32,6 +32,18 @@ class RedpackSendLog < ActiveRecord::Base
     redpack.try(:user)
   end
   
+  def qrcode_url
+    if redpack.is_cash?
+      ''
+    else
+      "#{SiteConfig.main_server}/qrcode?text=#{self.portal_url}"
+    end
+  end
+  
+  def portal_url
+    "#{SiteConfig.front_url}/?rrid=#{self.uniq_id}"
+  end
+  
   def format_money
     '%.2f' % (self.money / 100.0)
   end
