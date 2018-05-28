@@ -226,6 +226,72 @@ module API
           end
           
         end # end post open or close
+        
+        desc "编辑红包"
+        params do
+          requires :token, type: String,  desc: '用户TOKEN'
+          requires :id,    type: Integer, desc: '红包ID'
+          optional :subject, type: String, desc: '红包留言'
+          optional :sign, type: String, desc: '红包口令'
+          optional :theme_id,    type: Integer, desc: '红包模板'
+          optional :audio_id,    type: Integer, desc: '红包音效'
+        end
+        post :update do
+          user = authenticate!
+          
+          hb = Redpack.find_by(uniq_id: params[:id])
+          if hb.blank?
+            return render_error(4004, '红包不存在')
+          end
+          
+          if params[:subject].blank? and 
+             params[:sign].blank? and 
+             params[:theme_id].blank? and 
+             params[:audio_id].blank?
+            return render_error(-1, '至少需要提交一个修改字段')
+          end
+          
+          old_value = "#{hb.subject}#{hb.sign.join(',')}#{hb.theme_id}#{hb.audio_id}"
+          new_value = "#{params[:subject]}#{params[:sign]}#{params[:theme_id]}#{params[:audio_id]}"
+          
+          if old_value == new_value
+            render_json(hb, API::V1::Entities::SimpleRedpack)
+          else
+            # 需要更新红包
+            hb.subject = params[:subject]
+            
+            if params[:sign]
+              hb.sign = params[:sign].split(',')
+            end
+            
+            # 红包模板
+            if params[:theme_id]
+              theme = RedpackTheme.find_by(uniq_id: params[:theme_id])
+              if theme.blank?
+                return render_error(4004, '红包模板不存在')
+              end
+              
+              hb.theme_id = theme.uniq_id
+            end
+            
+            # 红包音效
+            if params[:audio_id]
+              audio = RedpackAudio.find_by(uniq_id: params[:audio_id])
+              if audio.blank?
+                return render_error(4004, '红包音效不存在')
+              end
+              
+              hb.audio_id = audio.uniq_id
+            end
+            
+            hb.save!
+            # 记录用户红包操作日志
+            UserRedpackOperation.create!(user_id: user.uid, redpack_id: hb.uniq_id, action: 'edit_hb')
+            
+            render_json(hb, API::V1::Entities::SimpleRedpack)
+          end
+          
+        end # end post update
                 
       end # end resource
       

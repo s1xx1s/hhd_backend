@@ -203,6 +203,8 @@ module API
         expose :sent_money, format_with: :rmb_format
         expose :sent_count
         expose :created_at, as: :time, format_with: :month_date_time
+        expose :theme, using: API::V1::Entities::RedpackTheme
+        expose :audio, as: :audio_obj, using: API::V1::Entities::RedpackAudio
       end
       
       class Redpack < SimpleRedpack
