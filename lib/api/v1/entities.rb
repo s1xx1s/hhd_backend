@@ -210,6 +210,7 @@ module API
       class Redpack < SimpleRedpack
         # expose :uniq_id, as: :id
         # expose :subject
+        unexpose :theme, :audio_obj
         expose :cover do |model, opts|
           model.redpack_image_url
         end
