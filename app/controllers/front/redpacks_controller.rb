@@ -1,6 +1,6 @@
 require 'rest-client'
 class Front::RedpacksController < Front::ApplicationController
-  # skip_before_filter :check_weixin_legality
+  # skip_before_filter :wx_notify
   before_filter :require_user
   
   def detail
