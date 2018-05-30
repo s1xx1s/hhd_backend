@@ -190,7 +190,7 @@ module API
         params do
           requires :token, type: String,  desc: '用户TOKEN'
           requires :id,    type: Integer, desc: '红包ID'
-          optional :sign,  type: String,  desc: '红包口令'
+          optional :sign_val, type: String,  desc: '红包口令'
           optional :loc,   type: String,  desc: '经纬度，用英文逗号分隔，例如：104.213222,30.9088273'
         end
         post :take do
