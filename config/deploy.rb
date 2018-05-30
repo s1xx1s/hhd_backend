@@ -17,7 +17,7 @@ set :rbenv_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl puma pumac
 
 set :keep_releases, 5
 
-set :linked_files, %w{config/database.yml config/config.yml config/redis.yml config/sidekiq.yml} # config/redis.yml
+set :linked_files, %w{config/database.yml config/config.yml config/redis.yml config/sidekiq.yml config/private_key.txt config/alipay_public_key.txt} # config/redis.yml
 
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/uploads public/system}
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/uploads public/system}

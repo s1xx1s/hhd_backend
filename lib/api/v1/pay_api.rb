@@ -19,7 +19,7 @@ module API
         params do
           requires :token, type: String, desc: '用户Token'
           requires :money, type: Integer, desc: '充值金额，单位为元'
-          optional :type,  type: Interger, desc: '支付类型，1为微信支付,2为支付宝支付，默认为1'
+          optional :type,  type: Integer, desc: '支付类型，1为微信支付,2为支付宝支付，默认为1'
         end
         post :charge do
           user = authenticate!
