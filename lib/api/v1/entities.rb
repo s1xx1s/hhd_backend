@@ -646,16 +646,8 @@ module API
       
       class TradeLog < Base
         expose :uniq_id, as: :id, format_with: :null
-        expose :title do |model, opts|
-          if model.tradeable_type == 'RedbagEarnLog' || model.tradeable_type == 'RedbagShareEarnLog'
-            model.redbag_info
-          else
-            model.title
-          end
-        end
-        expose :money do |model, opts|
-          model.format_money
-        end
+        expose :title
+        expose :money, format_with: :rmb_format
         expose :created_at, as: :time, format_with: :chinese_datetime
       end
       

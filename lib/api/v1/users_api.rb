@@ -105,6 +105,23 @@ module API
           render_json(user, API::V1::Entities::User)
         end # end get me
         
+        desc "交易明细"
+        params do
+          requires :token, type: String, desc: '用户TOKEN'
+          use :pagination
+        end
+        get :trades do
+          user = authenticate!
+          @logs = TradeLog.where(user_id: user.uid).order('created_at desc')
+          if params[:page]
+            @logs = @logs.paginate page: params[:page], per_page: page_size
+            total = @logs.total_entries
+          else
+            total = @logs.size
+          end
+          render_json(@logs, API::V1::Entities::TradeLog, {}, total)
+        end # end get trades
+        
         desc "用户会话开始"
         params do
           requires :token,     type: String,  desc: '用户TOKEN'
