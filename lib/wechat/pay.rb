@@ -83,6 +83,45 @@ module Wechat
       
     end
     
+    # 企业付款到用户零钱
+    def self.pay(billno, openid, user_name, money)
+      check_name = user_name.blank? ? 'NO_CHECK' : 'FORCE_CHECK'
+      re_user_name = user_name || ''
+      params = {
+        mch_appid: SiteConfig.wx_app_id,
+        mchid: SiteConfig.wx_mch_id,
+        nonce_str: SecureRandom.hex(16),
+        partner_trade_no: billno,
+        openid: openid,
+        check_name: check_name,
+        re_user_name: re_user_name,
+        amount: money.to_i,
+        desc: '用户提现',
+        spbill_create_ip: "#{SiteConfig.server_ip}"
+      }
+      
+      sign = sign_params(params)
+      params[:sign] = sign
+      
+      xml = params.to_xml(root: 'xml', skip_instruct: true, dasherize: false)
+      
+      result = RestClient::Resource.new(
+        'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
+        :ssl_client_cert  =>  OpenSSL::X509::Certificate.new(File.read("#{SiteConfig.wx_ssl_cert_file}")),
+        :ssl_client_key   =>  OpenSSL::PKey::RSA.new(File.read("#{SiteConfig.wx_ssl_key_file}"), "#{SiteConfig.wx_ssl_key_pass}"),
+        :ssl_ca_file      =>  "#{SiteConfig.wx_ssl_ca_cert_file}",
+        :verify_ssl       =>  OpenSSL::SSL::VERIFY_PEER
+      ).post(xml,  { :content_type => :xml })
+      # result = RestClient.post 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack', xml, { :content_type => :xml }
+      # puts result
+      pay_result = Hash.from_xml(result)['xml']
+      
+      puts pay_result
+      
+      return pay_result
+    end
+    
+    
     # 关闭订单
     def self.close_order(order)
       return false if order.blank?

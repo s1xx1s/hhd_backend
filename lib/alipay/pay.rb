@@ -15,7 +15,7 @@ module Alipay
           out_biz_no: billno,
           payee_type: 'ALIPAY_LOGONID',
           payee_account: mobile,
-          amount: money.to_s,
+          amount: (money / 100.0).to_s,
           payee_real_name: name || '',
           remark: '用户提现'
         }.to_json
