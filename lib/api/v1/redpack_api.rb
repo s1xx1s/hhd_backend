@@ -351,6 +351,39 @@ module API
           
         end # end post consume
         
+        desc "扫商家二维码或访问商家的主页，返回一个红包"
+        params do
+          requires :token,    type: String, desc: '用户TOKEN'
+          requires :owner_id, type: Integer, desc: '商家ID'
+          optional :loc,   type: String,  desc: '经纬度，用英文逗号分隔，例如：104.213222,30.9088273'
+        end
+        get :scan do
+          user = authenticate!
+          
+          # 查询用户抢过的所有红包ID
+          rids = RedpackSendLog.where(user_id: user.uid).pluck(:redpack_id)
+          
+          redpack = Redpack.where(owner_id: params[:owner_id]).where.not(uniq_id: rids).order('RANDOM()').first
+          if redpack.blank?
+            return render_error(4004, '没有可领取的红包')
+          end
+          
+          if !redpack.has_left?
+            return render_error(4002, '下手太慢，红包已经被抢完了！')
+          end
+          
+          # 保存红包浏览记录
+          loc = nil
+          if params[:loc]
+            loc = params[:loc].gsub(',', ' ')
+            loc = "POINT(#{loc})"
+          end
+          RedpackViewLog.create!(user_id: user.uid, redpack_id: redpack.uniq_id, ip: client_ip, location: loc)
+          
+          render_json(redpack, API::V1::Entities::Redpack)
+          
+        end # end get scan
+        
         desc "打开、关闭红包"
         params do
           requires :token, type: String,  desc: '用户TOKEN'
