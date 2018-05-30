@@ -17,9 +17,11 @@ module Wechat
           timestamp: timestamp,
           nonceStr: random_str,
           signature: signature,
-          jsApiList: ['chooseWXPay','onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone','openLocation','getLocation','getNetworkType']
+          jsApiList: ['chooseWXPay']
       }
     end
     
   end
 end
+
+# ['chooseWXPay','onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone','openLocation','getLocation','getNetworkType']
