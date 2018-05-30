@@ -5,7 +5,7 @@ module Wechat
     def self.unified_order(order, ip)
       return false if order.blank?
       
-      total_fee = SiteConfig.wx_pay_debug == 'true' ? '1' : "#{order.money * 100}"
+      total_fee = SiteConfig.wx_pay_debug == 'true' ? '1' : "#{order.money}"
       params = {
         appid: SiteConfig.wx_app_id,
         mch_id: SiteConfig.wx_mch_id,
@@ -17,7 +17,7 @@ module Wechat
         spbill_create_ip: ip,
         notify_url: SiteConfig.wx_pay_notify_url,
         trade_type: 'JSAPI',
-        openid: order.user.wechat_profile.try(:openid) || '',
+        openid: order.wx_auth_profile.try(:openid) || '',
         attach: '支付订单'
       }
       

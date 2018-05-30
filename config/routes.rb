@@ -36,6 +36,8 @@ Rails.application.routes.draw do
     # post redpack/take?id=4848474&sign=3838392
     # post 'redpack/take' => 'redpacks#take', as: :redpack_take
     
+    post 'pay/wx_notify' => 'home#wx_notify', as: :wx_notify
+    
   end
   
   # 队列后台管理
