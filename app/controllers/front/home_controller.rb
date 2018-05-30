@@ -1,5 +1,6 @@
 require 'rest-client'
 class Front::HomeController < Front::ApplicationController
+  skip_before_filter :verify_authenticity_token, :only => [:wx_notify]
   
   def wx_notify
     @output = {
