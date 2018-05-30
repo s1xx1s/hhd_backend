@@ -14,20 +14,20 @@ class TradeLog < ActiveRecord::Base
       if tradeable.is_cash? 
         # 现金红包直接修改余额
         balance = user.balance + self.money
-        user.balance = MAX(0, balance)
+        user.balance = [0, balance].max
         user.save!
       else
         # 非现金红包修改用户的抵扣余额
         if self.action == 'taked_hb' # 只有抢消费红包才修改用户的抵扣余额
           pay_money = user.pay_money + self.money
-          user.pay_money = MAX(0, pay_money)
+          user.pay_money = [0, pay_money].max
           user.save!
         end
       end
     else
       # 充值或提现直接操作余额
       balance = user.balance + self.money
-      user.balance = MAX(0, balance)
+      user.balance = [0, balance].max
       user.save!
     end
   end
