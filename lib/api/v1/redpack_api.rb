@@ -326,7 +326,7 @@ module API
           
           @log = RedpackSendLog.find_by(uniq_id: params[:rrid])
           if @log.blank?
-            return render_error(4004, '领取的红包记录不存在')
+            return render_error(4004, '红包领取记录不存在')
           end
           
           if user.uid != @log.redpack.try(:owner_id)
