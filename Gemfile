@@ -47,7 +47,7 @@ gem 'rack-user_agent'
 gem "active_admin_import" , '3.0.0'
 
 # 支持解析xml
-# gem 'actionpack-xml_parser'
+gem 'actionpack-xml_parser'
 
 # postgresql search
 # gem 'pg_search'
