@@ -45,7 +45,7 @@ class RedpackSendLog < ActiveRecord::Base
   end
   
   def portal_url
-    "#{SiteConfig.front_url}/?rrid=#{self.uniq_id}"
+    "#{SiteConfig.front_url}/?rsid=#{self.uniq_id}"
   end
   
   def format_money

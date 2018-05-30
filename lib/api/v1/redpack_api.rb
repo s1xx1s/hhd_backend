@@ -341,8 +341,6 @@ module API
             return render_error(6001, '您已经确认消费该红包金额，不能重复确认')
           end
           
-          
-          
           RedpackConsume.create!(send_log_id: @log.uniq_id, 
                                  money: @log.money, 
                                  owner_id: user.uid, 
