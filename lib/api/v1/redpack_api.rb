@@ -330,7 +330,7 @@ module API
           end
           
           if user.uid != @log.redpack.try(:owner_id)
-            return render_error(-2, '非法操作!')
+            return render_error(-2, '非法操作，此红包不是您发出的')
           end
           
           if @log.money <= 0
