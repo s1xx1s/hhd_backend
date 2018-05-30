@@ -17,7 +17,7 @@ class Withdraw < ActiveRecord::Base
                      tradeable_id: self.uniq_id,
                      user_id: self.user_id, 
                      money: -self.money, 
-                     title: '提现',
+                     title: self.note || '提现',
                      action: 'withdraw'
                      )
     
