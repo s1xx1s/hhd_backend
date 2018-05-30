@@ -11,6 +11,7 @@ class Withdraw < ActiveRecord::Base
   after_create :add_trade_log
   def add_trade_log
     # TradeLog.create!(tradeable: self, user_id: self.user_id, money: self.money, title: "#{note || '提现'}#{'%.2f' % self.money}元")
+    puts self.uniq_id
     
     TradeLog.create!(tradeable_type: self.class, 
                      tradeable_id: self.uniq_id,
