@@ -81,7 +81,7 @@ module API
             return render_error(8001, "提现失败，余额不足")
           end
           
-          Withdraw.create!(user_id: user.id, 
+          Withdraw.create!(user_id: user.uid, 
                            money: params[:money] * 100, 
                            account_no: params[:account_no], 
                            account_name: params[:account_name], 

@@ -56,7 +56,7 @@ class Withdraw < ActiveRecord::Base
         return result['return_msg']
       end
     else
-      code,msg = Alipay::Pay.pay(self.oid, account_no, account_name, money - fee)
+      code,msg = Alipay::Pay.pay(self.uniq_id, account_no, account_name, money - fee)
       if code == 0
         self.payed_at = Time.zone.now
         self.save!

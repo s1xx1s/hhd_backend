@@ -648,7 +648,7 @@ module API
         expose :uniq_id, as: :id, format_with: :null
         expose :title
         expose :money, format_with: :rmb_format
-        expose :created_at, as: :time, format_with: :chinese_datetime
+        expose :created_at, as: :time, format_with: :month_date_time
       end
       
       # 活动详情
