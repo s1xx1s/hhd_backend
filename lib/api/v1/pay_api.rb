@@ -82,7 +82,7 @@ module API
           end
           
           Withdraw.create!(user_id: user.id, 
-                           money: params[:money], 
+                           money: params[:money] * 100, 
                            account_no: params[:account_no], 
                            account_name: params[:account_name], 
                            fee: SiteConfig.withdraw_fee,
