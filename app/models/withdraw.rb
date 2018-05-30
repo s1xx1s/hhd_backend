@@ -16,7 +16,7 @@ class Withdraw < ActiveRecord::Base
     TradeLog.create!(tradeable_type: self.class, 
                      tradeable_id: self.uniq_id,
                      user_id: self.user_id, 
-                     money: self.money, 
+                     money: -self.money, 
                      title: '提现',
                      action: 'withdraw'
                      )
