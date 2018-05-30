@@ -35,7 +35,7 @@ module API
           charge = Charge.create!(money: (params[:money] * 100).to_i, # 转化成分 
                                   user_id: user.uid, 
                                   ip: client_ip, 
-                                  pay_type: pay_type)
+                                  pay_type: type)
           
           @result = Wechat::Pay.unified_order(charge, client_ip)
           if @result and @result['return_code'] == 'SUCCESS' and @result['return_msg'] == 'OK' and @result['result_code'] == 'SUCCESS'
