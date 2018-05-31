@@ -16,7 +16,7 @@ module Wechat
         total_fee: total_fee,
         spbill_create_ip: ip,
         notify_url: SiteConfig.wx_pay_notify_url,
-        trade_type: 'JSAPI',
+        trade_type: 'MWEB',#'JSAPI', # JSAPI 表示微信公众号支付 # MWEB 表示微信H5支付
         openid: order.wx_auth_profile.try(:openid) || '',
         attach: '支付订单'
       }
@@ -29,37 +29,12 @@ module Wechat
       # puts result
       pay_result = Hash.from_xml(result)['xml']
       # puts pay_result
-      return pay_result
-    end
-    
-    def self.test_h5_pay(order, ip)
-      return false if order.blank?
       
-      total_fee = SiteConfig.wx_pay_debug == 'true' ? '1' : "#{order.money}"
-      params = {
-        appid: SiteConfig.wx_app_id,
-        mch_id: SiteConfig.wx_mch_id,
-        device_info: 'WEB',
-        nonce_str: SecureRandom.hex(16),
-        body: "账号充值",
-        out_trade_no: SecureRandom.hex(10),
-        total_fee: total_fee,
-        spbill_create_ip: ip,
-        notify_url: SiteConfig.wx_pay_notify_url,
-        trade_type: 'MWEB',
-        openid: 'oMc3D0qrLikBmC0NB9unmECSx4bU',
-        attach: '支付订单'
-      }
+      #####################################################
+      # 此结果是微信H5支付返回的结果
+      # {"return_code"=>"SUCCESS", "return_msg"=>"OK", "appid"=>"wxb0463c984a911d20", "mch_id"=>"1482457452", "device_info"=>"WEB", "nonce_str"=>"aawIACsVCELxKK9Y", "sign"=>"DE2789A6040732DE1B7551277B4840ED", "result_code"=>"SUCCESS", "prepay_id"=>"wx31213745522221cfe8f701d40376561980", "trade_type"=>"MWEB", "mweb_url"=>"https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=wx31213745522221cfe8f701d40376561980&package=1359601095"}
+      #####################################################
       
-      sign = sign_params(params)
-      params[:sign] = sign
-      
-      xml = params.to_xml(root: 'xml', skip_instruct: true, dasherize: false)
-      result = RestClient.post 'https://api.mch.weixin.qq.com/pay/unifiedorder', xml, { :content_type => :xml }
-      # puts result
-      pay_result = Hash.from_xml(result)['xml']
-      
-      puts pay_result
       return pay_result
     end
     

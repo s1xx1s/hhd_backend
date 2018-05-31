@@ -40,7 +40,7 @@ module API
           @result = Wechat::Pay.unified_order(charge, client_ip)
           
           if @result and @result['return_code'] == 'SUCCESS' and @result['return_msg'] == 'OK' and @result['result_code'] == 'SUCCESS'
-            { code: 0, message: 'ok', data: Wechat::Pay.generate_jsapi_params(@result['prepay_id']) }
+            { code: 0, message: 'ok', data: { pay_url: @result['mweb_url'] } } # Wechat::Pay.generate_jsapi_params(@result['prepay_id']) 微信公众号支付
           else
             Wechat::Pay.close_order(charge)
             render_error(-3, '发起微信支付失败')
