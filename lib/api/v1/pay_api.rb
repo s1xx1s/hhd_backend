@@ -37,19 +37,22 @@ module API
                                   ip: client_ip, 
                                   pay_type: params[:type])
           
-          # @result = Wechat::Pay.unified_order(charge, client_ip)
-          
-          @result = Wechat::Pay.test_h5_pay(charge, client_ip)
+          @result = Wechat::Pay.unified_order(charge, client_ip)
           
           if @result and @result['return_code'] == 'SUCCESS' and @result['return_msg'] == 'OK' and @result['result_code'] == 'SUCCESS'
             { code: 0, message: 'ok', data: Wechat::Pay.generate_jsapi_params(@result['prepay_id']) }
-            
           else
             Wechat::Pay.close_order(charge)
             render_error(-3, '发起微信支付失败')
           end
           
         end # end post charge
+        
+        desc "H5测试充值"
+        get :wx_h5_charge do
+          @result = Wechat::Pay.test_h5_pay(nil, client_ip)
+          render_json_no_data
+        end # end get 
         
         desc "获取提现金额列表"
         params do

@@ -42,12 +42,12 @@ module Wechat
         device_info: 'WEB',
         nonce_str: SecureRandom.hex(16),
         body: "账号充值",
-        out_trade_no: order.uniq_id,
+        out_trade_no: SecureRandom.hex(10),
         total_fee: total_fee,
         spbill_create_ip: ip,
         notify_url: SiteConfig.wx_pay_notify_url,
         trade_type: 'MWEB',
-        openid: order.wx_auth_profile.try(:openid) || '',
+        openid: 'oMc3D0qrLikBmC0NB9unmECSx4bU',
         attach: '支付订单'
       }
       
