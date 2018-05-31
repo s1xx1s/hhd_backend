@@ -101,7 +101,7 @@ module API
         post :preview do
           user = authenticate!
           
-          @log = UserPreviewLog.create!(user_id: params[:token], 
+          @log = UserPreviewLog.create!(user_id: user.uid, 
                                         subject: params[:subject],
                                         theme_id: params[:theme_id],
                                         audio_id: params[:audio_id]
