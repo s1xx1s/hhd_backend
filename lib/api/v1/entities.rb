@@ -83,6 +83,9 @@ module API
         expose :qrcode_url
         expose :portal_url
         unexpose :private_token, as: :token
+        expose :wx_bind
+        expose :qq_bind
+        
         # expose :vip_expired_at, as: :vip_time, format_with: :chinese_date
         # expose :left_days do |model, opts|
         #   model.left_days

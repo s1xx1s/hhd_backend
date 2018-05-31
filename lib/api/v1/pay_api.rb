@@ -81,6 +81,13 @@ module API
             return render_error(8001, "提现失败，余额不足")
           end
           
+          if params[:type] == 1 # 微信提现先检查是否是绑定了微信用户
+            profile = AuthProfile.where(user_id: user.uid, provider: 'wechat').first
+            if profile.blank?
+              return render_error(8001, "您还未绑定微信，不能使用微信提现")
+            end
+          end
+          
           Withdraw.create!(user_id: user.uid, 
                            money: params[:money] * 100, 
                            account_no: params[:account_no], 

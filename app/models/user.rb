@@ -102,6 +102,14 @@ class User < ActiveRecord::Base
     end
   end
   
+  def wx_bind
+    AuthProfile.where(user_id: self.uid, provider: 'wechat').count > 0
+  end
+  
+  def qq_bind
+    AuthProfile.where(user_id: self.uid, provider: 'qq').count > 0
+  end
+  
   def left_days
     if self.vip_expired_at.blank?
       '普通账号'
