@@ -36,11 +36,17 @@ module API
                                   user_id: user.uid, 
                                   ip: client_ip, 
                                   pay_type: params[:type])
+                                  
+          ua = request.user_agent
+          is_wx_browser = ua.include?('MicroMessenger') || ua.include?('webbrowser')
           
-          @result = Wechat::Pay.unified_order(charge, client_ip)
+          @result = Wechat::Pay.wx_unified_order(charge, client_ip, is_wx_browser)
           
           if @result and @result['return_code'] == 'SUCCESS' and @result['return_msg'] == 'OK' and @result['result_code'] == 'SUCCESS'
-            { code: 0, message: 'ok', data: { pay_url: @result['mweb_url'] } } # Wechat::Pay.generate_jsapi_params(@result['prepay_id']) 微信公众号支付
+            # 微信浏览器打开充值，只能使用公众号支付
+            # 非微信浏览器打开充值，使用微信H5支付
+            json_result = is_wx_browser ? Wechat::Pay.generate_jsapi_params(@result['prepay_id']) : { pay_url: @result['mweb_url'] }
+            { code: 0, message: 'ok', data: json_result }
           else
             Wechat::Pay.close_order(charge)
             render_error(-3, '发起微信支付失败')
