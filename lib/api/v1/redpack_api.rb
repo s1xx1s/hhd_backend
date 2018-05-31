@@ -82,7 +82,7 @@ module API
           # 记录交易日志
           TradeLog.create!(user_id: user.uid, 
                            title: "发出一个#{redpack.is_cash? ? '现金' : '消费'}红包", 
-                           money: redpack.total_money, 
+                           money: -redpack.total_money, 
                            action: "sent_hb",
                            tradeable_type: redpack.class,
                            tradeable_id: redpack.uniq_id
