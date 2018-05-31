@@ -34,7 +34,7 @@ class Redpack < ActiveRecord::Base
     self.sign.join(',')
   end
   
-  validate :total_money_large_sent_money
+  validate :total_money_large_sent_money, on: :create
   def total_money_large_sent_money
     if total_money <= sent_money
       errors.add(:base, "红包总金额必须要大于#{sent_money / 100.0}元")
