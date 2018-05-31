@@ -127,7 +127,7 @@ class User < ActiveRecord::Base
   end
   
   def portal_url
-    "#{SiteConfig.front_url}/?uid=#{self.uid}"
+    ShortUrl.sina("#{SiteConfig.front_url}/?uid=#{self.uid}")
   end
   
   def vip_expired?

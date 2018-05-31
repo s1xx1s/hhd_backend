@@ -45,7 +45,7 @@ class RedpackSendLog < ActiveRecord::Base
   end
   
   def portal_url
-    "#{SiteConfig.front_url}/?rsid=#{self.uniq_id}"
+    ShortUrl.sina("#{SiteConfig.front_url}/?rsid=#{self.uniq_id}")
   end
   
   def format_money

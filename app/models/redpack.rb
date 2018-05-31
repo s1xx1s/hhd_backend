@@ -146,7 +146,7 @@ class Redpack < ActiveRecord::Base
   end
   
   def detail_url
-    "#{SiteConfig.front_url}/?rid=#{self.uniq_id}"
+    ShortUrl.sina("#{SiteConfig.front_url}/?rid=#{self.uniq_id}")
   end
   
   def add_view_count
