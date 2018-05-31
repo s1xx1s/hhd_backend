@@ -37,7 +37,10 @@ module API
                                   ip: client_ip, 
                                   pay_type: params[:type])
           
-          @result = Wechat::Pay.unified_order(charge, client_ip)
+          # @result = Wechat::Pay.unified_order(charge, client_ip)
+          
+          @result = Wechat::Pay.test_h5_pay(charge, client_ip)
+          
           if @result and @result['return_code'] == 'SUCCESS' and @result['return_msg'] == 'OK' and @result['result_code'] == 'SUCCESS'
             { code: 0, message: 'ok', data: Wechat::Pay.generate_jsapi_params(@result['prepay_id']) }
             
