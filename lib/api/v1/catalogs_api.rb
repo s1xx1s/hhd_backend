@@ -18,6 +18,20 @@ module API
           optional :token, type: String, desc: '用户认证TOKEN'
         end
         get do
+          
+          if params[:cid] == 0 # 获取自定义模板
+            user = User.find_by(private_token: params[:token])
+            if user.blank?
+              render_error(4000, '获取自定义模板失败')
+              return
+            else
+              @themes = RedpackTheme.where(opened: true, user_id: user.uid)
+                          .order('sort asc, id desc')
+              render_json(@themes, API::V1::Entities::RedpackTheme)
+            end
+          end
+          
+          # 获取通用数据
           @catalog = Catalog.find_by(uniq_id: params[:cid])
           if @catalog.blank?
             return render_error(4004, '分类不存在')
